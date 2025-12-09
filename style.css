@@ -193,7 +193,7 @@ body {
 }
 
 /* ========== جداول البيانات ========== */
-.inventory-table, .history-table {
+.index-table, .history-table {
     width: 100%;
     border-collapse: collapse;
     background: white;
@@ -202,20 +202,20 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.inventory-table th, .history-table th,
-.inventory-table td, .history-table td {
+.index-table th, .history-table th,
+.index-table td, .history-table td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #eee;
 }
 
-.inventory-table th, .history-table th {
+.index-table th, .history-table th {
     background: #1e3c72;
     color: white;
     font-weight: bold;
 }
 
-.inventory-table tr:hover, .history-table tr:hover {
+.index-table tr:hover, .history-table tr:hover {
     background: #f5f7fa;
 }
 
