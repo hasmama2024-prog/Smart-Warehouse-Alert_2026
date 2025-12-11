@@ -3,331 +3,1177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة مخزون - محل وائل للملابس الرجالية</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- الشريط العلوي -->
-    <header class="header">
-        <h1>🛍️ محل وائل للملابس الرجالية</h1>
-        <h2>نظام إدارة المخزون والتنبيهات</h2>
-    </header>
-
-    <!-- شريط التنقل -->
-    <nav class="navbar">
-        <button class="nav-btn active" onclick="showSection('alerts')">التنبيهات</button>
-        <button class="nav-btn" onclick="showSection('inventory')">مخزون المنتجات</button>
-        <button class="nav-btn" onclick="showSection('review')">مراجعة المخزون</button>
-        <button class="nav-btn" onclick="showSection('addStock')">إضافة كمية</button>
-    </nav>
-
-    <!-- قسم التنبيهات -->
-    <section id="alerts" class="section active">
-        <div class="section-title">🔔 التنبيهات الحرجة</div>
-        
-        <div class="alert-box critical">
-            <h3>⚠️ منتجات منخفضة للغاية (نفذ قريباً)</h3>
-            <table class="alerts-table">
-                <thead>
-                    <tr>
-                        <th>كود المنتج</th>
-                        <th>اسم المنتج</th>
-                        <th>المقاس</th>
-                        <th>اللون</th>
-                        <th>كمية متوفرة</th>
-                        <th>حد إعادة الطلب</th>
-                        <th>إجراء</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>00123</td>
-                        <td>قميص قطن أبيض</td>
-                        <td>M</td>
-                        <td>أبيض</td>
-                        <td class="qty-critical">2</td>
-                        <td>10</td>
-                        <td><button class="btn-order">اطلب الآن</button></td>
-                    </tr>
-                    <tr>
-                        <td>00456</td>
-                        <td>بنطال جينز أزرق</td>
-                        <td>34</td>
-                        <td>أزرق</td>
-                        <td class="qty-critical">1</td>
-                        <td>8</td>
-                        <td><button class="btn-order">اطلب الآن</button></td>
-                    </tr>
-                    <tr>
-                        <td>00789</td>
-                        <td>تيشيرت رياضي أسود</td>
-                        <td>L</td>
-                        <td>أسود</td>
-                        <td class="qty-warning">5</td>
-                        <td>10</td>
-                        <td><button class="btn-warning">تحذير</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="summary-cards">
-            <div class="card card-danger">
-                <h4>منتجات ناقصة</h4>
-                <p class="number">12</p>
-                <p>منتج تحت الحد الأدنى</p>
-            </div>
-            <div class="card card-warning">
-                <h4>تحت المراقبة</h4>
-                <p class="number">8</p>
-                <p>منتج قريب من الحد</p>
-            </div>
-            <div class="card card-success">
-                <h4>مخزون جيد</h4>
-                <p class="number">156</p>
-                <p>منتج بكمية كافية</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- قسم مخزون المنتجات -->
-    <section id="inventory" class="section">
-        <div class="section-title">📦 مخزون المنتجات</div>
-        
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="ابحث بكود المنتج أو الاسم..." onkeyup="filterTable()">
-            <button class="btn-search">🔍 بحث</button>
-        </div>
-
-        <table class="inventory-table">
-            <thead>
-                <tr>
-                    <th>كود المنتج</th>
-                    <th>اسم المنتج</th>
-                    <th>المقاس</th>
-                    <th>اللون</th>
-                    <th>الكمية المتوفرة</th>
-                    <th>سعر البيع</th>
-                    <th>حالة المخزون</th>
-                    <th>إجراءات</th>
-                </tr>
-            </thead>
-            <tbody id="inventoryTable">
-                <tr>
-                    <td>00123</td>
-                    <td>قميص قطن أبيض</td>
-                    <td>M</td>
-                    <td>أبيض</td>
-                    <td class="qty-critical">2</td>
-                    <td>75.00</td>
-                    <td><span class="status status-danger">منخفض</span></td>
-                    <td>
-                        <button class="btn-action">تفاصيل</button>
-                        <button class="btn-action">تعديل</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>00456</td>
-                    <td>بنطال جينز أزرق</td>
-                    <td>34</td>
-                    <td>أزرق</td>
-                    <td class="qty-critical">1</td>
-                    <td>120.00</td>
-                    <td><span class="status status-danger">منخفض</span></td>
-                    <td>
-                        <button class="btn-action">تفاصيل</button>
-                        <button class="btn-action">تعديل</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>00789</td>
-                    <td>تيشيرت رياضي أسود</td>
-                    <td>L</td>
-                    <td>أسود</td>
-                    <td class="qty-warning">5</td>
-                    <td>45.00</td>
-                    <td><span class="status status-warning">مراقبة</span></td>
-                    <td>
-                        <button class="btn-action">تفاصيل</button>
-                        <button class="btn-action">تعديل</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>01234</td>
-                    <td>بلوزة صوف رمادي</td>
-                    <td>XL</td>
-                    <td>رمادي</td>
-                    <td class="qty-success">25</td>
-                    <td>90.00</td>
-                    <td><span class="status status-success">جيد</span></td>
-                    <td>
-                        <button class="btn-action">تفاصيل</button>
-                        <button class="btn-action">تعديل</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-
-    <!-- قسم طلب مراجعة المخزون -->
-    <section id="review" class="section">
-        <div class="section-title">📋 طلب مراجعة مخزون</div>
-        
-        <form class="review-form">
-            <h3>إنشاء طلب مراجعة مخزون جديد</h3>
-            
-            <div class="form-group">
-                <label>سبب المراجعة:</label>
-                <select class="form-control">
-                    <option>مراجعة دورية شهرية</option>
-                    <option>تنبيهات انخفاض مخزون</option>
-                    <option>مخزون زائد عن الحاجة</option>
-                    <option>كشف تلفيات أو اتلاف</option>
-                    <option>أخرى</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>الفرع المطلوب مراجعته:</label>
-                <select class="form-control">
-                    <option>الفرع الرئيسي - المدينة القديمة</option>
-                    <option>فرع شارع عشرين</option>
-                    <option>فرع حي الأندلس</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>الفئة المطلوبة (اختياري):</label>
-                <select class="form-control">
-                    <option>جميع الفئات</option>
-                    <option>ملابس رجالية كاجوال</option>
-                    <option>ملابس رجالية كلاسيك</option>
-                    <option>ملابس أطفال</option>
-                    <option>إكسسوارات</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>ملاحظات إضافية:</label>
-                <textarea class="form-control" rows="4" placeholder="أضف أي ملاحظات أو تعليمات خاصة بالمراجعة..."></textarea>
-            </div>
-
-            <button type="button" class="btn-primary" onclick="generateReview()">
-                📝 إنشاء طلب المراجعة
-            </button>
-        </form>
-
-        <div class="review-history">
-            <h3>سجل طلبات المراجعة السابقة</h3>
-            <table class="history-table">
-                <thead>
-                    <tr>
-                        <th>رقم الطلب</th>
-                        <th>التاريخ</th>
-                        <th>الفرع</th>
-                        <th>السبب</th>
-                        <th>الحالة</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>RV-001</td>
-                        <td>01/12/2025</td>
-                        <td>الفرع الرئيسي</td>
-                        <td>مراجعة شهرية</td>
-                        <td><span class="status status-success">مكتملة</span></td>
-                        <td><button class="btn-action">عرض التقرير</button></td>
-                    </tr>
-                    <tr>
-                        <td>RV-002</td>
-                        <td>05/12/2025</td>
-                        <td>فرع شارع عشرين</td>
-                        <td>تنبيهات انخفاض</td>
-                        <td><span class="status status-warning">قيد التنفيذ</span></td>
-                        <td><button class="btn-action">متابعة</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- قسم إضافة كمية للمخزون -->
-    <section id="addStock" class="section">
-        <div class="section-title">➕ إضافة كمية جديدة للمخزون</div>
-        
-        <form class="stock-form">
-            <div class="form-group">
-                <label>كود المنتج:</label>
-                <input type="text" class="form-control" placeholder="أدخل كود الباركود أو ابحث...">
-                <button type="button" class="btn-search-inline">🔍 بحث</button>
-            </div>
-
-            <div class="product-details" style="display: none;">
-                <h4>تفاصيل المنتج:</h4>
-                <p><strong>الاسم:</strong> قميص قطن أبيض</p>
-                <p><strong>المقاس:</strong> M | <strong>اللون:</strong> أبيض</p>
-                <p><strong>الكمية الحالية:</strong> <span class="qty-critical">2</span> قطع</p>
-            </div>
-
-            <div class="form-group">
-                <label>الكمية المضافة:</label>
-                <input type="number" class="form-control" min="1" placeholder="مثال: 20">
-            </div>
-
-            <div class="form-group">
-                <label>تاريخ الانتهار (اختياري):</label>
-                <input type="date" class="form-control">
-            </div>
-
-            <div class="form-group">
-                <label>ملاحظات:</label>
-                <input type="text" class="form-control" placeholder="مثال: وارد جديد من المورد...">
-            </div>
-
-            <button type="button" class="btn-success">✅ تأكيد الإضافة</button>
-        </form>
-    </section>
-
-    <script>
-        // دوال التنقل بين الأقسام
-        function showSection(sectionId) {
-            // إخفاء جميع الأقسام
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
-            
-            // إظهار القسم المطلوب
-            document.getElementById(sectionId).classList.add('active');
-            
-            // تعديل الأزرار النشطة
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+    <title>Dashboard المخزون - Premium</title>
+    <style>
+        /* ===== PREMIUM DESIGN SYSTEM ===== */
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border-color: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        // دالة البحث في الجدول
-        function filterTable() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toUpperCase();
-            const table = document.getElementById('inventoryTable');
-            const tr = table.getElementsByTagName('tr');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            for (let i = 0; i < tr.length; i++) {
-                const td = tr[i].getElementsByTagName('td')[1]; // العمود الثاني (اسم المنتج)
-                if (td) {
-                    const txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = '';
-                    } else {
-                        tr[i].style.display = 'none';
-                    }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #0c1220 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER - GLASSMORPHISM ===== */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-blue), #60a5fa);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-widget {
+            position: relative;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+
+        .notification-widget:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .dashboard-wrapper {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* ===== SIDEBAR - MINIMALIST ===== */
+        .sidebar {
+            width: 260px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px 0;
+            border-left: 1px solid var(--glass-border);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 30px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 0 15px;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-icon {
+            width: 20px;
+            font-size: 18px;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to left, var(--border-color), transparent);
+        }
+
+        /* ===== STATS CARDS - GLASSMORPHISM ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: var(--accent-blue);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.urgent {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .stat-icon.new {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .stat-icon.solved {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .stat-value.urgent { color: var(--accent-red); }
+        .stat-value.new { color: var(--accent-orange); }
+        .stat-value.solved { color: var(--accent-green); }
+
+        .stat-change {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* ===== FILTER BAR - MINIMALIST ===== */
+        .filter-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-input {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        /* ===== TABLE - PREMIUM ===== */
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 16px 25px;
+            text-align: right;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        td {
+            padding: 16px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-image {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-blue), #60a5fa);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .product-category {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stock-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stock-critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .stock-low {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-new {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-orange);
+        }
+
+        .status-read {
+            background: rgba(100, 116, 139, 0.2);
+            color: #64748b;
+        }
+
+        .status-solved {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        .status-ignored {
+            background: rgba(107, 114, 128, 0.2);
+            color: #6b7280;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+        }
+
+        .icon-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+            transform: scale(1.1);
+        }
+
+        .icon-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .icon-btn.success:hover {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+        }
+
+        /* ===== MODAL - GLASSMORPHISM ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow: hidden;
+            animation: modalSlide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-red);
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(100%);
+                position: absolute;
+            }
+
+            .main-content {
+                margin-right: 0;
+                padding: 20px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                justify-content: stretch;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING ANIMATION -->
+    <div id="loader" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
+        <div style="width: 50px; height: 50px; border: 4px solid rgba(59, 130, 246, 0.3); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s ease-in-out infinite;"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="brand">
+            <div class="brand-icon">📦</div>
+            <span>مخزون بريستيج</span>
+        </div>
+        
+        <div class="user-section">
+            <div class="notification-widget" onclick="showNotifications()">
+                🔔
+                <span class="notification-badge" id="notificationCount">3</span>
+            </div>
+            <select style="background: transparent; border: 1px solid var(--glass-border); color: white; padding: 8px 12px; border-radius: 8px;">
+                <option>👤 محمد المنصف</option>
+                <option>⚙️ إعدادات</option>
+                <option>🚪 تسجيل خروج</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div class="dashboard-wrapper">
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>لوحة التحكم</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🛒</span>
+                <span>المبيعات</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👕</span>
+                <span>المنتجات</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">📦</span>
+                <span>تنبيهات المخزون</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">📈</span>
+                <span>التقارير</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>الموظفون</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>الإعدادات</span>
+            </a>
+        </nav>
+
+        <!-- CONTENT -->
+        <main class="content">
+            <!-- PAGE TITLE -->
+            <div class="page-title animate-in">
+                <span>📦 إدارة تنبيهات المخزون</span>
+                <small style="font-size: 14px; color: var(--text-secondary); font-weight: 400;">
+                    آخر تحديث: <span id="lastUpdate">2025-12-11 14:30:25</span>
+                </small>
+            </div>
+
+            <!-- STATS CARDS -->
+            <div class="stats-grid animate-in">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">تحتاج لإجراء عاجل</div>
+                            <div class="stat-value urgent" id="urgentCount">2</div>
+                            <div class="stat-change">انخفاض بنسبة 40% هذا الأسبوع</div>
+                        </div>
+                        <div class="stat-icon urgent">🚨</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">تنبيهات جديدة</div>
+                            <div class="stat-value new" id="newCount">3</div>
+                            <div class="stat-change">+2 منذ آخر زيارة</div>
+                        </div>
+                        <div class="stat-icon new">📢</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">تم حلها اليوم</div>
+                            <div class="stat-value solved" id="solvedCount">5</div>
+                            <div class="stat-change">أداء ممتاز 🔥</div>
+                        </div>
+                        <div class="stat-icon solved">✅</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="filter-bar animate-in">
+                <div class="filter-title">🔍 تصفية التنبيهات</div>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">حالة التنبيه</label>
+                        <select class="filter-input" id="statusFilter" onchange="filterAlerts()">
+                            <option value="all">جميع التنبيهات</option>
+                            <option value="جديد">جديد</option>
+                            <option value="مقروء">مقروء</option>
+                            <option value="محلول">محلول</option>
+                            <option value="متجاهل">متجاهل</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">اسم المنتج</label>
+                        <input type="text" class="filter-input" id="productFilter" placeholder="ابحث عن منتج..." onkeyup="filterAlerts()">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">من تاريخ</label>
+                        <input type="date" class="filter-input" id="dateFrom" onchange="filterAlerts()">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">إلى تاريخ</label>
+                        <input type="date" class="filter-input" id="dateTo" onchange="filterAlerts()">
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="filterAlerts()">تطبيق التصفية</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">إعادة تعيين</button>
+                    <button class="btn btn-secondary" onclick="refreshData()">🔄 تحديث البيانات</button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-container animate-in">
+                <div class="table-header">
+                    <div class="table-title">📋 قائمة التنبيهات</div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="exportToExcel()">📤 تصدير Excel</button>
+                        <button class="btn btn-secondary" onclick="printAlerts()">🖨️ طباعة</button>
+                    </div>
+                </div>
+                
+                <table id="alertsTable">
+                    <thead>
+                        <tr>
+                            <th>المنتج</th>
+                            <th>باركود</th>
+                            <th>المخزون</th>
+                            <th>الحد الأدنى</th>
+                            <th>نسبة النقص</th>
+                            <th>تاريخ التنبيه</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alertsTableBody">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: إنشاء أمر شراء -->
+    <div class="modal" id="purchaseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📋 إنشاء أمر شراء</div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP NOTIFICATION -->
+    <div class="popup-notification" id="popupNotification" style="display: none;">
+        <strong>🚨 تنبيه جديد!</strong><br>
+        <span id="popupMessage"></span>
+    </div>
+
+    <script>
+        // بيانات تجريبية
+        let alerts = [
+            {
+                id: 1,
+                product: 'قميص أبيض L',
+                barcode: '123456789',
+                currentStock: 0,
+                minLevel: 10,
+                alertDate: '2025-12-11 08:30:15',
+                status: 'جديد',
+                category: 'قمصان'
+            },
+            {
+                id: 2,
+                product: 'بنطلون جينز M',
+                barcode: '987654321',
+                currentStock: 3,
+                minLevel: 10,
+                alertDate: '2025-12-11 09:15:42',
+                status: 'جديد',
+                category: 'بناطيل'
+            },
+            {
+                id: 3,
+                product: 'جاكيت أسود XL',
+                barcode: '1122334455',
+                currentStock: 5,
+                minLevel: 8,
+                alertDate: '2025-12-10 16:45:30',
+                status: 'مقروء',
+                category: 'جاكيتات'
+            },
+            {
+                id: 4,
+                product: 'تيشيرت رياضي S',
+                barcode: '5566778899',
+                currentStock: 2,
+                minLevel: 15,
+                alertDate: '2025-12-09 11:20:10',
+                status: 'محلول',
+                category: 'تيشيرتات'
+            }
+        ];
+
+        // تحميل البيانات عند بدء التشغيل
+        window.onload = function() {
+            loadAlerts();
+            updateStats();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(simulateNewAlert, 45000); // تنبيه جديد كل 45 ثانية
+        };
+
+        // تحميل التنبيهات في الجدول
+        function loadAlerts(filteredAlerts = null) {
+            const data = filteredAlerts || alerts;
+            const tbody = document.getElementById('alertsTableBody');
+            
+            tbody.innerHTML = data.map((alert, index) => {
+                const shortagePercent = Math.round(((alert.minLevel - alert.currentStock) / alert.minLevel) * 100);
+                const urgencyClass = alert.currentStock === 0 ? 'stock-critical' : 
+                                   alert.currentStock <= alert.minLevel * 0.5 ? 'stock-low' : '';
+                
+                return `
+                    <tr class="animate-in" style="animation-delay: ${index * 0.05}s">
+                        <td>
+                            <div class="product-cell">
+                                <div class="product-image">👕</div>
+                                <div class="product-info">
+                                    <div class="product-name">${alert.product}</div>
+                                    <div class="product-category">${alert.category}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${alert.barcode}</td>
+                        <td>
+                            <span class="stock-indicator ${urgencyClass}">
+                                ${alert.currentStock === 0 ? '🚨 نفذ' : alert.currentStock}
+                            </span>
+                        </td>
+                        <td>${alert.minLevel}</td>
+                        <td style="font-weight: 600; color: ${shortagePercent > 75 ? '#ef4444' : '#f59e0b'};">
+                            ${shortagePercent > 0 ? `-${shortagePercent}%` : '0%'}
+                        </td>
+                        <td style="font-size: 13px; color: var(--text-secondary);">${alert.alertDate}</td>
+                        <td>
+                            <span class="status-badge status-${alert.status}">
+                                ${alert.status}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-cell">
+                                ${getActionButtons(alert)}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getActionButtons(alert) {
+            if (alert.status === 'محلول') {
+                return '<button class="icon-btn" onclick="viewDetails(' + alert.id + ')" title="عرض التفاصيل">👁️</button>';
+            } else if (alert.status === 'متجاهل') {
+                return '<button class="icon-btn" onclick="restoreAlert(' + alert.id + ')" title="استرجاع">↩️</button>';
+            } else {
+                return `
+                    <button class="icon-btn success" onclick="createPurchaseOrder(${alert.id})" title="إنشاء أمر شراء">📋</button>
+                    <button class="icon-btn" onclick="markAsRead(${alert.id})" title="تحديد كمقروء">✓</button>
+                    <button class="icon-btn danger" onclick="ignoreAlert(${alert.id})" title="تجاهل">🚫</button>
+                `;
+            }
+        }
+
+        function updateStats() {
+            const urgent = alerts.filter(a => a.currentStock === 0).length;
+            const newAlerts = alerts.filter(a => a.status === 'جديد').length;
+            const solved = alerts.filter(a => a.status === 'محلول').length;
+            
+            document.getElementById('urgentCount').textContent = urgent;
+            document.getElementById('newCount').textContent = newAlerts;
+            document.getElementById('solvedCount').textContent = solved;
+            document.getElementById('notificationCount').textContent = urgent + newAlerts;
+        }
+
+        function updateTime() {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ar-EG');
+        }
+
+        function filterAlerts() {
+            const status = document.getElementById('statusFilter').value;
+            const product = document.getElementById('productFilter').value.toLowerCase();
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            
+            let filtered = alerts;
+            
+            if (status !== 'all') filtered = filtered.filter(a => a.status === status);
+            if (product) filtered = filtered.filter(a => a.product.toLowerCase().includes(product));
+            if (dateFrom) filtered = filtered.filter(a => new Date(a.alertDate) >= new Date(dateFrom));
+            if (dateTo) filtered = filtered.filter(a => new Date(a.alertDate) <= new Date(dateTo));
+            
+            loadAlerts(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('productFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            loadAlerts();
+        }
+
+        function refreshData() {
+            // محاكاة تحديث البيانات
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                loadAlerts();
+                updateStats();
+                alert('✅ تم تحديث البيانات بنجاح');
+            }, 1500);
+        }
+
+        function createPurchaseOrder(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            const suggestedQty = alert.minLevel * 2;
+            
+            document.getElementById('modalBody').innerHTML = `
+                <div style="display: grid; gap: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">المنتج</label>
+                            <div style="font-weight: 600; font-size: 16px;">${alert.product}</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">باركود</label>
+                            <div style="font-family: monospace;">${alert.barcode}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">المخزون الحالي</label>
+                            <div style="color: #ef4444; font-weight: bold; font-size: 18px;">${alert.currentStock} قطعة</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">الحد الأدنى</label>
+                            <div style="font-weight: 600;">${alert.minLevel} قطعة</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">النقص</label>
+                            <div style="color: #ef4444; font-weight: bold;">${alert.minLevel - alert.currentStock} قطعة</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label style="font-size: 12px; color: var(--text-secondary);">الكمية المقترحة للشراء</label>
+                        <input type="number" id="purchaseQty" value="${suggestedQty}" min="1" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white; font-size: 16px; font-weight: bold;">
+                        <small style="color: #64748b;">مقترح: ${alert.minLevel} × 2 = ${suggestedQty} قطعة</small>
+                    </div>
+                    
+                    <div>
+                        <label style="font-size: 12px; color: var(--text-secondary);">اختر المورد</label>
+                        <select id="supplier" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white;">
+                            <option>محمد للأزياء (المورد الافتراضي)</option>
+                            <option>الشركة الوطنية للملابس</option>
+                            <option>وكيل الماركات العالمية</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">سعر الوحدة (دينار)</label>
+                            <input type="number" id="unitPrice" placeholder="0.00" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">الإجمالي</label>
+                            <div id="totalPrice" style="padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid var(--accent-green); border-radius: 8px; color: var(--accent-green); font-size: 18px; font-weight: bold;">0.00 دينار</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label style="font-size: 12px; color: var(--text-secondary);">ملاحظات إضافية</label>
+                        <textarea id="notes" rows="3" placeholder="أي ملاحظات خاصة بالطلب..." style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 25px;">
+                        <button class="btn btn-primary" onclick="submitPurchase(${alertId})" style="flex: 1;">📤 إرسال الطلب</button>
+                        <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">❌ إلغاء</button>
+                    </div>
+                </div>
+            `;
+            
+            // حساب الإجمالي تلقائياً
+            function calcTotal() {
+                const qty = parseInt(document.getElementById('purchaseQty')?.value || 0);
+                const price = parseFloat(document.getElementById('unitPrice')?.value || 0);
+                const total = qty * price;
+                const totalField = document.getElementById('totalPrice');
+                if (totalField) {
+                    totalField.textContent = total.toFixed(2) + ' دينار';
+                }
+            }
+            
+            document.getElementById('purchaseQty')?.addEventListener('input', calcTotal);
+            document.getElementById('unitPrice')?.addEventListener('input', calcTotal);
+            
+            document.getElementById('purchaseModal').style.display = 'flex';
+        }
+
+        function submitPurchase(alertId) {
+            const qty = document.getElementById('purchaseQty').value;
+            const price = document.getElementById('unitPrice').value;
+            
+            if (!qty || !price) {
+                alert('⚠️ يرجى إدخال الكمية والسعر!');
+                return;
+            }
+            
+            // محاكاة الإرسال
+            const alert = alerts.find(a => a.id === alertId);
+            alert.status = 'محلول';
+            
+            closeModal();
+            loadAlerts();
+            updateStats();
+            
+            alert('✅ تم إرسال أمر الشراء بنجاح!\n\n' +
+                  `الطلب: ${alert.product}\n` +
+                  `الكمية: ${qty} قطعة\n` +
+                  `الإجمالي: ${(qty * price).toFixed(2)} دينار\n` +
+                  `رقم الطلب: PO-${Date.now()}`);
+        }
+
+        function markAsRead(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            if (alert && alert.status === 'جديد') {
+                alert.status = 'مقروء';
+                loadAlerts();
+                updateStats();
+            }
+        }
+
+        function ignoreAlert(alertId) {
+            if (confirm('🚫 هل أنت متأكد من تجاهل هذا التنبيه؟')) {
+                const reason = prompt('أدخل سبب التجاهل:');
+                if (reason) {
+                    const alert = alerts.find(a => a.id === alertId);
+                    alert.status = 'متجاهل';
+                    alert.ignoreReason = reason;
+                    loadAlerts();
+                    updateStats();
+                    alert('✅ تم تجاهل التنبيه.');
                 }
             }
         }
 
-        // دالة إنشاء طلب المراجعة
-        function generateReview() {
-            alert('✅ تم إنشاء طلب المراجعة بنجاح!\nرقم الطلب: RV-003\nسيتم إشعار المدير بالطلب.');
+        function restoreAlert(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            if (alert) {
+                alert.status = 'جديد';
+                loadAlerts();
+                updateStats();
+                alert('✅ تم استرجاع التنبيه.');
+            }
+        }
+
+        function viewDetails(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            alert('📋 تفاصيل التنبيه:\n\n' +
+                  `المنتج: ${alert.product}\n` +
+                  `الباركود: ${alert.barcode}\n` +
+                  `المخزون: ${alert.currentStock}\n` +
+                  `الحد الأدنى: ${alert.minLevel}\n` +
+                  `الحالة: ${alert.status}\n` +
+                  `التاريخ: ${alert.alertDate}`);
+        }
+
+        function closeModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function simulateNewAlert() {
+            const products = ['حذاء رياضي 42', 'قميص مخطط M', 'بنطلون كلاسيكي L', 'جاكيت جينز XL'];
+            const newAlert = {
+                id: alerts.length + 1,
+                product: products[Math.floor(Math.random() * products.length)],
+                barcode: Math.floor(Math.random() * 900000000) + 100000000,
+                currentStock: Math.floor(Math.random() * 3),
+                minLevel: 10,
+                alertDate: new Date().toLocaleString('ar-EG'),
+                status: 'جديد',
+                category: 'ملابس رجالية'
+            };
+            
+            alerts.unshift(newAlert);
+            loadAlerts();
+            updateStats();
+            
+            // إشعار منبثق
+            const popup = document.getElementById('popupNotification');
+            document.getElementById('popupMessage').textContent = `${newAlert.product} - المخزون: ${newAlert.currentStock}`;
+            popup.style.display = 'block';
+            setTimeout(() => popup.style.display = 'none', 5000);
+        }
+
+        function exportToExcel() {
+            alert('📤 جاري تصدير البيانات إلى Excel...');
+        }
+
+        function printAlerts() {
+            alert('🖨️ جاري تحضير التقرير للطباعة...');
+        }
+
+        function showNotifications() {
+            alert('🔔 3 تنبيهات جديدة تتطلب اهتمامك!');
         }
     </script>
 </body>
