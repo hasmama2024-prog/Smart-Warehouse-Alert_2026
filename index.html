@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard المخزون - Premium</title>
+    <title>Dashboard المخزون - إدارة محل ملابس رجالية</title>
     <style>
-        /* ===== PREMIUM DESIGN SYSTEM ===== */
+        /* ===== PREMIUM DESIGN SYSTEM - (CSS الأصلي) ===== */
         :root {
             --primary-dark: #0f172a;
             --secondary-dark: #1e293b;
@@ -18,6 +18,9 @@
             --border-color: #334155;
             --glass-bg: rgba(30, 41, 59, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
+            /* New: Profit/Loss Colors */
+            --profit-color: #10b981; /* Green */
+            --loss-color: #ef4444;   /* Red */
         }
 
         * {
@@ -33,7 +36,7 @@
             min-height: 100vh;
         }
 
-        /* ===== HEADER - GLASSMORPHISM ===== */
+        /* HEADER - GLASSMORPHISM */
         .header {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -104,13 +107,13 @@
             font-weight: bold;
         }
 
-        /* ===== MAIN LAYOUT ===== */
+        /* MAIN LAYOUT */
         .dashboard-wrapper {
             display: flex;
             min-height: calc(100vh - 80px);
         }
 
-        /* ===== SIDEBAR - MINIMALIST ===== */
+        /* SIDEBAR - MINIMALIST */
         .sidebar {
             width: 260px;
             background: var(--glass-bg);
@@ -147,7 +150,7 @@
             font-size: 18px;
         }
 
-        /* ===== CONTENT AREA ===== */
+        /* CONTENT AREA */
         .content {
             flex: 1;
             padding: 40px;
@@ -170,7 +173,7 @@
             background: linear-gradient(to left, var(--border-color), transparent);
         }
 
-        /* ===== STATS CARDS - GLASSMORPHISM ===== */
+        /* STATS CARDS - GLASSMORPHISM */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -247,7 +250,7 @@
             margin-top: 8px;
         }
 
-        /* ===== FILTER BAR - MINIMALIST ===== */
+        /* FILTER BAR - MINIMALIST */
         .filter-bar {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -299,8 +302,8 @@
             border-color: var(--accent-blue);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
-
-        /* ===== TABLE - PREMIUM ===== */
+        
+        /* TABLE - PREMIUM */
         .table-container {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -358,6 +361,15 @@
 
         .btn-secondary:hover {
             background: rgba(255,255,255,0.2);
+        }
+
+        .btn-warning {
+            background: var(--accent-orange);
+            color: var(--primary-dark);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
         }
 
         table {
@@ -505,7 +517,7 @@
             color: var(--accent-green);
         }
 
-        /* ===== MODAL - GLASSMORPHISM ===== */
+        /* MODAL - GLASSMORPHISM */
         .modal {
             display: none;
             position: fixed;
@@ -568,8 +580,27 @@
             max-height: 60vh;
             overflow-y: auto;
         }
+        
+        /* New: Profit/Loss Display */
+        .profit-status {
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .profit-status.is-profit {
+            color: var(--profit-color);
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--profit-color);
+        }
+        .profit-status.is-loss {
+            color: var(--loss-color);
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--loss-color);
+        }
 
-        /* ===== RESPONSIVE ===== */
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(100%);
@@ -613,7 +644,7 @@
             }
         }
 
-        /* ===== ANIMATIONS ===== */
+        /* ANIMATIONS */
         @keyframes fadeInUp {
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -625,16 +656,14 @@
     </style>
 </head>
 <body>
-    <!-- LOADING ANIMATION -->
-    <div id="loader" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none;">
+    <div id="loader" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: none; z-index: 2001;">
         <div style="width: 50px; height: 50px; border: 4px solid rgba(59, 130, 246, 0.3); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s ease-in-out infinite;"></div>
     </div>
 
-    <!-- HEADER -->
     <header class="header">
         <div class="brand">
-            <div class="brand-icon">📦</div>
-            <span>مخزون بريستيج</span>
+            <div class="brand-icon">👔</div>
+            <span>إدارة محل ملابس رجالية</span>
         </div>
         
         <div class="user-section">
@@ -650,9 +679,7 @@
         </div>
     </header>
 
-    <!-- MAIN LAYOUT -->
     <div class="dashboard-wrapper">
-        <!-- SIDEBAR -->
         <nav class="sidebar">
             <a href="#" class="nav-item">
                 <span class="nav-icon">📊</span>
@@ -671,6 +698,10 @@
                 <span>تنبيهات المخزون</span>
             </a>
             <a href="#" class="nav-item">
+                <span class="nav-icon">🏷️</span>
+                <span>إدارة التخفيضات</span>
+            </a>
+            <a href="#" class="nav-item">
                 <span class="nav-icon">📈</span>
                 <span>التقارير</span>
             </a>
@@ -684,9 +715,7 @@
             </a>
         </nav>
 
-        <!-- CONTENT -->
         <main class="content">
-            <!-- PAGE TITLE -->
             <div class="page-title animate-in">
                 <span>📦 إدارة تنبيهات المخزون</span>
                 <small style="font-size: 14px; color: var(--text-secondary); font-weight: 400;">
@@ -694,7 +723,6 @@
                 </small>
             </div>
 
-            <!-- STATS CARDS -->
             <div class="stats-grid animate-in">
                 <div class="stat-card">
                     <div class="stat-header">
@@ -730,9 +758,8 @@
                 </div>
             </div>
 
-            <!-- FILTER BAR -->
             <div class="filter-bar animate-in">
-                <div class="filter-title">🔍 تصفية التنبيهات</div>
+                <div class="filter-title">🔍 تصفية التنبيهات وإجراءات الشراء</div>
                 <div class="filter-controls">
                     <div class="filter-group">
                         <label class="filter-label">حالة التنبيه</label>
@@ -757,14 +784,14 @@
                         <input type="date" class="filter-input" id="dateTo" onchange="filterAlerts()">
                     </div>
                 </div>
-                <div class="btn-group" style="margin-top: 20px;">
+                <div class="btn-group" style="margin-top: 20px; display: flex; gap: 10px;">
                     <button class="btn btn-primary" onclick="filterAlerts()">تطبيق التصفية</button>
                     <button class="btn btn-secondary" onclick="resetFilters()">إعادة تعيين</button>
                     <button class="btn btn-secondary" onclick="refreshData()">🔄 تحديث البيانات</button>
+                    <button class="btn btn-warning" onclick="generateBatchPurchaseOrder()">📜 تجميع وطباعة طلب شراء</button>
                 </div>
             </div>
 
-            <!-- TABLE -->
             <div class="table-container animate-in">
                 <div class="table-header">
                     <div class="table-title">📋 قائمة التنبيهات</div>
@@ -788,34 +815,41 @@
                         </tr>
                     </thead>
                     <tbody id="alertsTableBody">
-                        <!-- سيتم ملؤها بواسطة JavaScript -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </main>
     </div>
 
-    <!-- MODAL: إنشاء أمر شراء -->
     <div class="modal" id="purchaseModal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">📋 إنشاء أمر شراء</div>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <button class="modal-close" onclick="closeModal('purchaseModal')">&times;</button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- سيتم ملؤها ديناميكياً -->
-            </div>
+            <div class="modal-body" id="purchaseModalBody">
+                </div>
         </div>
     </div>
 
-    <!-- POPUP NOTIFICATION -->
-    <div class="popup-notification" id="popupNotification" style="display: none;">
+    <div class="modal" id="saleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🏷️ إنشاء عرض تخفيض</div>
+                <button class="modal-close" onclick="closeModal('saleModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="saleModalBody">
+                </div>
+        </div>
+    </div>
+
+    <div class="popup-notification" id="popupNotification" style="display: none; position: fixed; bottom: 20px; right: 20px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 10px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">
         <strong>🚨 تنبيه جديد!</strong><br>
         <span id="popupMessage"></span>
     </div>
 
     <script>
-        // بيانات تجريبية
+        // بيانات تجريبية (تم إضافة سعر الشراء وسعر البيع)
         let alerts = [
             {
                 id: 1,
@@ -825,7 +859,9 @@
                 minLevel: 10,
                 alertDate: '2025-12-11 08:30:15',
                 status: 'جديد',
-                category: 'قمصان'
+                category: 'قمصان',
+                costPrice: 50.00,  // سعر الشراء
+                sellingPrice: 85.00 // سعر البيع الأصلي
             },
             {
                 id: 2,
@@ -835,7 +871,9 @@
                 minLevel: 10,
                 alertDate: '2025-12-11 09:15:42',
                 status: 'جديد',
-                category: 'بناطيل'
+                category: 'بناطيل',
+                costPrice: 90.00,
+                sellingPrice: 150.00
             },
             {
                 id: 3,
@@ -845,7 +883,9 @@
                 minLevel: 8,
                 alertDate: '2025-12-10 16:45:30',
                 status: 'مقروء',
-                category: 'جاكيتات'
+                category: 'جاكيتات',
+                costPrice: 150.00,
+                sellingPrice: 280.00
             },
             {
                 id: 4,
@@ -855,7 +895,9 @@
                 minLevel: 15,
                 alertDate: '2025-12-09 11:20:10',
                 status: 'محلول',
-                category: 'تيشيرتات'
+                category: 'تيشيرتات',
+                costPrice: 30.00,
+                sellingPrice: 55.00
             }
         ];
 
@@ -865,7 +907,7 @@
             updateStats();
             updateTime();
             setInterval(updateTime, 1000);
-            setInterval(simulateNewAlert, 45000); // تنبيه جديد كل 45 ثانية
+            // setInterval(simulateNewAlert, 45000); // تنبيه جديد كل 45 ثانية
         };
 
         // تحميل التنبيهات في الجدول
@@ -901,7 +943,7 @@
                         </td>
                         <td style="font-size: 13px; color: var(--text-secondary);">${alert.alertDate}</td>
                         <td>
-                            <span class="status-badge status-${alert.status}">
+                            <span class="status-badge status-${alert.status === 'جديد' ? 'new' : alert.status === 'مقروء' ? 'read' : alert.status === 'محلول' ? 'solved' : 'ignored'}">
                                 ${alert.status}
                             </span>
                         </td>
@@ -921,11 +963,16 @@
             } else if (alert.status === 'متجاهل') {
                 return '<button class="icon-btn" onclick="restoreAlert(' + alert.id + ')" title="استرجاع">↩️</button>';
             } else {
-                return `
+                let buttons = `
                     <button class="icon-btn success" onclick="createPurchaseOrder(${alert.id})" title="إنشاء أمر شراء">📋</button>
                     <button class="icon-btn" onclick="markAsRead(${alert.id})" title="تحديد كمقروء">✓</button>
                     <button class="icon-btn danger" onclick="ignoreAlert(${alert.id})" title="تجاهل">🚫</button>
                 `;
+                // NEW: Add Sale Offer button if stock is low or critical
+                if (alert.currentStock <= alert.minLevel * 0.5) {
+                    buttons += `<button class="icon-btn btn-warning" onclick="createSaleOffer(${alert.id})" title="إضافة لتخفيضات">🏷️</button>`;
+                }
+                return buttons;
             }
         }
 
@@ -945,6 +992,7 @@
         }
 
         function filterAlerts() {
+            // (بقية دالة filterAlerts لم تتغير)
             const status = document.getElementById('statusFilter').value;
             const product = document.getElementById('productFilter').value.toLowerCase();
             const dateFrom = document.getElementById('dateFrom').value;
@@ -961,6 +1009,7 @@
         }
 
         function resetFilters() {
+            // (بقية دالة resetFilters لم تتغير)
             document.getElementById('statusFilter').value = 'all';
             document.getElementById('productFilter').value = '';
             document.getElementById('dateFrom').value = '';
@@ -969,7 +1018,7 @@
         }
 
         function refreshData() {
-            // محاكاة تحديث البيانات
+            // (بقية دالة refreshData لم تتغير)
             const loader = document.getElementById('loader');
             loader.style.display = 'block';
             
@@ -981,11 +1030,165 @@
             }, 1500);
         }
 
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        /* ===== NEW FEATURE 1: SALE OFFER MANAGEMENT ===== */
+
+        function createSaleOffer(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            
+            document.getElementById('saleModalBody').innerHTML = `
+                <div style="display: grid; gap: 20px;">
+                    <h3 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">منتج التخفيض: ${alert.product}</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; text-align: center;">
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">المخزون الحالي</label>
+                            <div style="color: var(--accent-orange); font-weight: bold; font-size: 18px;">${alert.currentStock} قطعة</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">سعر التكلفة (الشراء)</label>
+                            <div style="font-weight: 600;">${alert.costPrice.toFixed(2)} دينار</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: var(--text-secondary);">سعر البيع الأصلي</label>
+                            <div style="font-weight: 600; color: var(--accent-green);">${alert.sellingPrice.toFixed(2)} دينار</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="filter-label">نسبة التخفيض (%)</label>
+                        <input type="number" id="discountPercent" value="20" min="5" max="90" step="5" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white; font-size: 16px; font-weight: bold;">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label class="filter-label">السعر بعد التخفيض</label>
+                            <div id="newSellingPrice" style="padding: 12px; background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); border-radius: 8px; color: var(--accent-blue); font-size: 18px; font-weight: bold;">-- دينار</div>
+                        </div>
+                        <div>
+                            <label class="filter-label">هامش الربح / الخسارة</label>
+                            <div id="profitStatus" class="profit-status">--</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-size: 12px; color: var(--text-secondary);">مدة العرض (أيام)</label>
+                        <input type="number" id="saleDuration" value="7" min="1" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white;">
+                    </div>
+                    
+                    <div class="btn-group" style="margin-top: 25px; display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="submitSaleOffer(${alertId})" style="flex: 1;">🏷️ تطبيق التخفيض</button>
+                        <button class="btn btn-secondary" onclick="closeModal('saleModal')" style="flex: 1;">❌ إلغاء</button>
+                    </div>
+                </div>
+            `;
+            
+            // Auto-calculate logic
+            function calcSale() {
+                const discount = parseFloat(document.getElementById('discountPercent')?.value || 0);
+                const originalPrice = alert.sellingPrice;
+                const costPrice = alert.costPrice;
+                
+                if (discount < 0 || discount > 100) return;
+
+                const newPrice = originalPrice * (1 - discount / 100);
+                const profit = newPrice - costPrice;
+
+                document.getElementById('newSellingPrice').textContent = newPrice.toFixed(2) + ' دينار';
+                
+                const profitElement = document.getElementById('profitStatus');
+                if (profitElement) {
+                    profitElement.textContent = profit.toFixed(2) + ' دينار';
+                    profitElement.classList.remove('is-profit', 'is-loss');
+                    if (profit > 0) {
+                        profitElement.classList.add('is-profit');
+                        profitElement.textContent += ' (ربح)';
+                    } else if (profit < 0) {
+                        profitElement.classList.add('is-loss');
+                        profitElement.textContent += ' (خسارة)';
+                    }
+                }
+            }
+            
+            document.getElementById('discountPercent')?.addEventListener('input', calcSale);
+            calcSale(); // Run on load
+            
+            document.getElementById('saleModal').style.display = 'flex';
+        }
+
+        function submitSaleOffer(alertId) {
+            const discount = document.getElementById('discountPercent').value;
+            const duration = document.getElementById('saleDuration').value;
+            const newPrice = parseFloat(document.getElementById('newSellingPrice').textContent);
+            
+            if (!discount || !duration) {
+                alert('⚠️ يرجى إدخال نسبة التخفيض ومدة العرض!');
+                return;
+            }
+            
+            const alertItem = alerts.find(a => a.id === alertId);
+            
+            // Simulate processing the sale offer
+            closeModal('saleModal');
+            
+            alert(`✅ تم إنشاء عرض التخفيض بنجاح!\n\n` +
+                  `المنتج: ${alertItem.product}\n` +
+                  `نسبة التخفيض: ${discount}%\n` +
+                  `السعر الجديد: ${newPrice.toFixed(2)} دينار\n` +
+                  `هامش الربح: ${document.getElementById('profitStatus').textContent}`);
+        }
+
+        /* ===== NEW FEATURE 2: BATCH PURCHASE ORDER ===== */
+
+        function generateBatchPurchaseOrder() {
+            // Find products that are at 'Critical' (0) or 'Low' (<= 50% of minLevel) stock
+            const batchAlerts = alerts.filter(a => 
+                a.currentStock === 0 || a.currentStock <= a.minLevel * 0.5
+            ).filter(a => 
+                a.status !== 'محلول' && a.status !== 'متجاهل' // Only include items needing action
+            );
+
+            if (batchAlerts.length === 0) {
+                alert('⚠️ لا توجد منتجات تتطلب أمر شراء مجمع حالياً (المخزون المنتهي أو المنخفض جداً فقط).');
+                return;
+            }
+
+            // Create a printable format
+            let orderList = '## 📜 طلب شراء مجمع للمورد (ملابس رجالية)\n\n';
+            orderList += `**التاريخ:** ${new Date().toLocaleString('ar-EG')}\n`;
+            orderList += `**الحالة:** يتطلب إرسال عاجل\n\n`;
+            orderList += '| المنتج | باركود | المخزون الحالي | الحد الأدنى | الكمية المطلوبة (مقترح) |\n';
+            orderList += '| :--- | :--- | :---: | :---: | :---: |\n';
+
+            batchAlerts.forEach(alert => {
+                const requiredQty = alert.minLevel * 2; // Suggest buying double the minimum
+                orderList += `| ${alert.product} | ${alert.barcode} | ${alert.currentStock} | ${alert.minLevel} | **${requiredQty}** |\n`;
+            });
+
+            // Simulate printing/exporting
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>طلب شراء مجمع</title>');
+            printWindow.document.write('<style>body { direction: rtl; font-family: Tahoma, sans-serif; } table { width: 100%; border-collapse: collapse; margin-top: 20px; } th, td { border: 1px solid #ddd; padding: 8px; text-align: right; } th { background-color: #f2f2f2; }</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(orderList.replace(/\n/g, '<br>').replace(/\|/g, '</td><td>').replace(/<br>\| :---/g, '<thead><tr>').replace(/\|/g, '</td><td>').replace(/\|/g, '').replace(/<br>/g, '').replace('##', '<h1>').replace('**', '<b>').replace('**', '</b>').replace('**', '<b>').replace('**', '</b>'));
+            printWindow.document.write('</body></html>');
+            
+            // A common way to print is to open a window and call print on it.
+            // printWindow.print(); // Uncomment this line to enable actual printing
+            
+            alert('✅ تم تجميع المنتجات المنخفضة وإعداد ملف طلب الشراء بنجاح. يرجى مراجعة نافذة الطباعة/التصدير.');
+        }
+
+        /* ===== (بقية الدوال لم تتغير) ===== */
+
         function createPurchaseOrder(alertId) {
             const alert = alerts.find(a => a.id === alertId);
             const suggestedQty = alert.minLevel * 2;
             
-            document.getElementById('modalBody').innerHTML = `
+            document.getElementById('purchaseModalBody').innerHTML = `
                 <div style="display: grid; gap: 20px;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
@@ -1031,11 +1234,11 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
                             <label style="font-size: 12px; color: var(--text-secondary);">سعر الوحدة (دينار)</label>
-                            <input type="number" id="unitPrice" placeholder="0.00" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white;">
+                            <input type="number" id="unitPrice" placeholder="0.00" value="${alert.costPrice}" style="width: 100%; padding: 12px; background: rgba(15,23,42,0.5); border: 1px solid var(--border-color); border-radius: 8px; color: white;">
                         </div>
                         <div>
                             <label style="font-size: 12px; color: var(--text-secondary);">الإجمالي</label>
-                            <div id="totalPrice" style="padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid var(--accent-green); border-radius: 8px; color: var(--accent-green); font-size: 18px; font-weight: bold;">0.00 دينار</div>
+                            <div id="totalPrice" style="padding: 12px; background: rgba(16,185,129,0.1); border: 1px solid var(--accent-green); border-radius: 8px; color: var(--accent-green); font-size: 18px; font-weight: bold;">-- دينار</div>
                         </div>
                     </div>
                     
@@ -1046,7 +1249,7 @@
                     
                     <div class="btn-group" style="margin-top: 25px;">
                         <button class="btn btn-primary" onclick="submitPurchase(${alertId})" style="flex: 1;">📤 إرسال الطلب</button>
-                        <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1;">❌ إلغاء</button>
+                        <button class="btn btn-secondary" onclick="closeModal('purchaseModal')" style="flex: 1;">❌ إلغاء</button>
                     </div>
                 </div>
             `;
@@ -1064,6 +1267,8 @@
             
             document.getElementById('purchaseQty')?.addEventListener('input', calcTotal);
             document.getElementById('unitPrice')?.addEventListener('input', calcTotal);
+
+            calcTotal(); // Calculate initial total
             
             document.getElementById('purchaseModal').style.display = 'flex';
         }
@@ -1081,7 +1286,7 @@
             const alert = alerts.find(a => a.id === alertId);
             alert.status = 'محلول';
             
-            closeModal();
+            closeModal('purchaseModal');
             loadAlerts();
             updateStats();
             
@@ -1126,31 +1331,35 @@
         }
 
         function viewDetails(alertId) {
-            const alert = alerts.find(a => a.id === alertId);
+            const alertItem = alerts.find(a => a.id === alertId);
             alert('📋 تفاصيل التنبيه:\n\n' +
-                  `المنتج: ${alert.product}\n` +
-                  `الباركود: ${alert.barcode}\n` +
-                  `المخزون: ${alert.currentStock}\n` +
-                  `الحد الأدنى: ${alert.minLevel}\n` +
-                  `الحالة: ${alert.status}\n` +
-                  `التاريخ: ${alert.alertDate}`);
-        }
-
-        function closeModal() {
-            document.getElementById('purchaseModal').style.display = 'none';
+                  `المنتج: ${alertItem.product}\n` +
+                  `الباركود: ${alertItem.barcode}\n` +
+                  `المخزون: ${alertItem.currentStock}\n` +
+                  `الحد الأدنى: ${alertItem.minLevel}\n` +
+                  `سعر الشراء: ${alertItem.costPrice.toFixed(2)} دينار\n` +
+                  `سعر البيع: ${alertItem.sellingPrice.toFixed(2)} دينار\n` +
+                  `الحالة: ${alertItem.status}\n` +
+                  `التاريخ: ${alertItem.alertDate}`);
         }
 
         function simulateNewAlert() {
             const products = ['حذاء رياضي 42', 'قميص مخطط M', 'بنطلون كلاسيكي L', 'جاكيت جينز XL'];
+            const costPrices = [70, 45, 120, 180];
+            const sellingPrices = [120, 80, 200, 320];
+            const randomIndex = Math.floor(Math.random() * products.length);
+            
             const newAlert = {
                 id: alerts.length + 1,
-                product: products[Math.floor(Math.random() * products.length)],
+                product: products[randomIndex],
                 barcode: Math.floor(Math.random() * 900000000) + 100000000,
                 currentStock: Math.floor(Math.random() * 3),
                 minLevel: 10,
                 alertDate: new Date().toLocaleString('ar-EG'),
                 status: 'جديد',
-                category: 'ملابس رجالية'
+                category: 'ملابس رجالية',
+                costPrice: costPrices[randomIndex],
+                sellingPrice: sellingPrices[randomIndex]
             };
             
             alerts.unshift(newAlert);
@@ -1178,3 +1387,4 @@
     </script>
 </body>
 </html>
+
