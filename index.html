@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة محل ملابس رجالية - لوحة تحكم المخزون</title>
     <style>
-        /* --- 1. التصميم (CSS) --- */
         :root {
             --primary-color: #007bff;
             --secondary-color: #6c757d;
@@ -90,10 +89,9 @@
             margin-top: 10px;
         }
 
-        /* --- الأزرار الرئيسية --- */
         .actions-bar {
             margin: 30px 0;
-            text-align: left; /* لعرض الأزرار بشكل أفضل */
+            text-align: left;
             border-top: 1px solid #eee;
             padding-top: 20px;
         }
@@ -126,7 +124,6 @@
             background-color: #1e7e34;
         }
 
-        /* --- جدول التنبيهات --- */
         .alerts-section h2 {
             border-bottom: 2px solid var(--primary-color);
             padding-bottom: 10px;
@@ -148,7 +145,7 @@
             padding: 12px 15px;
             border: 1px solid #ddd;
             text-align: right;
-            white-space: nowrap; /* لمنع كسر النصوص في العناوين */
+            white-space: nowrap;
         }
 
         .alerts-table th {
@@ -165,7 +162,6 @@
             background-color: #e9e9e9;
         }
 
-        /* --- حالة التنبيه --- */
         .status-new {
             background-color: var(--danger-color);
             color: white;
@@ -194,9 +190,8 @@
             border-radius: 5px;
         }
 
-        /* --- المودال (النوافذ المنبثقة) --- */
         .modal {
-            display: none; /* مخفي بشكل افتراضي */
+            display: none;
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -262,7 +257,7 @@
 
     <div class="container">
         <header>
-            <h1>إدارة محل ملابس رجالية 👔</h1>
+            <h1>إدارة تنبيهات المخزون 📣</h1>
             <p id="current-time"></p>
         </header>
 
@@ -277,7 +272,7 @@
             </div>
             <div class="stat-card" style="border-right-color: var(--warning-color);">
                 <h3>💰 قيمة المخزون الحالي (تقريبي)</h3>
-                <p id="total-value">0 SAR</p>
+                <p id="total-value">0 دينار</p>
             </div>
             <div class="stat-card" style="border-right-color: var(--success-color);">
                 <h3>✅ التنبيهات المحلولة</h3>
@@ -286,7 +281,7 @@
         </section>
 
         <section class="actions-bar">
-            <button class="btn-success" onclick="createBatchPurchaseOrder()">📜 إنشاء طلب شراء مجمع</button>
+            <button class="btn-success" onclick="createBatchPurchaseOrder()">📜 إنشاء طلب شراء منتجات</button>
             <button class="btn-primary" onclick="openSalesModal()">🏷️ إدارة عروض التخفيضات</button>
         </section>
 
@@ -308,7 +303,7 @@
                         </tr>
                     </thead>
                     <tbody id="alerts-body">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </section>
@@ -320,9 +315,9 @@
             <h2>إنشاء أمر شراء جديد</h2>
             <p>اسم المنتج: <span id="purchaseProductName"></span></p>
             <input type="number" id="purchaseQuantity" placeholder="الكمية المطلوبة (بالحبة)" value="100" min="10">
-            <input type="number" id="purchaseCost" placeholder="سعر التكلفة للوحدة (SAR)" min="0.01">
+            <input type="number" id="purchaseCost" placeholder="سعر التكلفة للوحدة (دينار)" min="0.01">
             <input type="text" id="purchaseSupplier" placeholder="اسم المورد (اختياري)">
-            <p>السعر الإجمالي المتوقع: <span id="purchaseTotalPrice">0 SAR</span></p>
+            <p>السعر الإجمالي المتوقع: <span id="purchaseTotalPrice">0 دينار</span></p>
             <button class="btn-primary" onclick="submitPurchase()">تأكيد وإرسال الطلب</button>
         </div>
     </div>
@@ -334,7 +329,7 @@
             <p>المنتج: <span id="saleProductName"></span></p>
             <p>السعر الأصلي: <span id="saleOriginalPrice"></span></p>
             <input type="number" id="saleDiscount" placeholder="نسبة الخصم (%)" min="1" max="100" value="10" oninput="calculateSaleProfit()">
-            <p>السعر الجديد بعد الخصم: <span id="saleNewPrice">0 SAR</span></p>
+            <p>السعر الجديد بعد الخصم: <span id="saleNewPrice">0 دينار</span></p>
             <p>تكلفة الوحدة: <span id="saleCostPrice"></span></p>
             <p>الربح المتوقع: <span id="saleProfitStatus" style="font-weight: bold;">يُحسب بعد إدخال الخصم</span></p>
             <button class="btn-success" onclick="submitSaleOffer()">تأكيد عرض التخفيض</button>
@@ -352,20 +347,15 @@
     </div>
 
     <script>
-        /* --- 2. البيانات والجافاسكريبت (JavaScript) --- */
-
         let alerts = [
-            // بيانات تجريبية (لن تُستخدم إذا كانت هناك بيانات محفوظة في Local Storage)
-            { id: 1, product: 'قميص أبيض كلاسيك', currentStock: 5, minLevel: 50, costPrice: 40, sellingPrice: 80, lastUpdate: '2025-12-01', status: 'جديد' },
-            { id: 2, product: 'بنطلون جينز أزرق', currentStock: 120, minLevel: 100, costPrice: 60, sellingPrice: 150, lastUpdate: '2025-12-05', status: 'مقروء' },
-            { id: 3, product: 'كوفية شتوية صوف', currentStock: 0, minLevel: 30, costPrice: 15, sellingPrice: 45, lastUpdate: '2025-11-20', status: 'جديد' },
-            { id: 4, product: 'ربطة عنق حرير سوداء', currentStock: 25, minLevel: 50, costPrice: 20, sellingPrice: 60, lastUpdate: '2025-12-09', status: 'جديد' },
-            { id: 5, product: 'جاكيت جلد أسود', currentStock: 80, minLevel: 70, costPrice: 250, sellingPrice: 500, lastUpdate: '2025-12-08', status: 'محلول' }
+            { id: 0007269, product: 'قميص أبيض كلاسيك', currentStock: 5, minLevel: 50, costPrice: 40, sellingPrice: 80, lastUpdate: '2025-12-01', status: 'جديد' },
+            { id: 0008727, product: 'بنطلون جينز أزرق', currentStock: 120, minLevel: 100, costPrice: 60, sellingPrice: 150, lastUpdate: '2025-12-05', status: 'مقروء' },
+            { id: 0008377, product: 'كوفية شتوية صوف', currentStock: 0, minLevel: 30, costPrice: 15, sellingPrice: 45, lastUpdate: '2025-11-20', status: 'جديد' },
+            { id: 0008376, product: 'ربطة عنق حرير سوداء', currentStock: 25, minLevel: 50, costPrice: 20, sellingPrice: 60, lastUpdate: '2025-12-09', status: 'جديد' },
+            { id: 0003762, product: 'جاكيت جلد أسود', currentStock: 80, minLevel: 70, costPrice: 250, sellingPrice: 500, lastUpdate: '2025-12-08', status: 'محلول' }
         ];
 
-        let selectedAlertId = null; // لتخزين ID التنبيه عند فتح المودال
-
-        // --- دوال Local Storage للتحكم في البيانات الحية ---
+        let selectedAlertId = null;
 
         function saveAlerts() {
             try {
@@ -379,17 +369,13 @@
             const storedAlerts = localStorage.getItem('inventoryAlerts');
             if (storedAlerts) {
                 try {
-                    // محاولة تحميل البيانات المحفوظة
                     alerts = JSON.parse(storedAlerts);
                 } catch (e) {
                     console.error("❌ فشل تحليل البيانات المحفوظة، استخدام البيانات التجريبية.", e);
-                    // إذا فشل التحليل، يتم استخدام البيانات التجريبية الافتراضية
                 }
             }
-            loadAlerts(); // تحميل البيانات في الجدول
+            loadAlerts();
         }
-
-        // --- دوال عرض البيانات ---
 
         function updateTime() {
             const now = new Date();
@@ -404,13 +390,12 @@
             const criticalItems = activeAlerts.filter(a => a.currentStock < a.minLevel).length;
             const solvedAlerts = alerts.filter(a => a.status === 'محلول').length;
             
-            // حساب القيمة الإجمالية للمخزون
             const totalValue = alerts.reduce((sum, a) => sum + (a.currentStock * a.costPrice), 0);
 
             document.getElementById('total-alerts').textContent = activeAlerts.length;
             document.getElementById('critical-items').textContent = criticalItems;
             document.getElementById('solved-alerts').textContent = solvedAlerts;
-            document.getElementById('total-value').textContent = `${totalValue.toFixed(2)} SAR`;
+            document.getElementById('total-value').textContent = `${totalValue.toFixed(2)} دينار`;
         }
 
         function getStockStatus(current, min) {
@@ -427,12 +412,12 @@
                 status = '✅ جيد';
             }
             
-            return `<span style="font-weight: bold; color: ${ratio <= 0 ? var(--danger-color) : ratio < 0.5 ? '#ff4500' : ratio < 1 ? '#daa520' : var(--success-color)};">${status}</span>`;
+            return `<span style="font-weight: bold; color: ${ratio <= 0 ? '#dc3545' : ratio < 0.5 ? '#ff4500' : ratio < 1 ? '#daa520' : '#28a745'};">${status}</span>`;
         }
 
         function loadAlerts() {
             const tbody = document.getElementById('alerts-body');
-            tbody.innerHTML = ''; // مسح المحتوى القديم
+            tbody.innerHTML = '';
 
             alerts.forEach(alert => {
                 let statusClass = '';
@@ -440,7 +425,7 @@
                 else if (alert.status === 'مقروء') statusClass = 'status-read';
                 else if (alert.status === 'محلول') statusClass = 'status-solved';
                 else if (alert.status === 'متجاهل') statusClass = 'status-ignored';
-                else statusClass = 'status-read'; // افتراضي
+                else statusClass = 'status-read';
 
                 const isSolved = alert.status === 'محلول' || alert.status === 'متجاهل';
                 
@@ -451,7 +436,7 @@
                     <td>${alert.currentStock}</td>
                     <td>${alert.minLevel}</td>
                     <td>${getStockStatus(alert.currentStock, alert.minLevel)}</td>
-                    <td>${alert.costPrice} / ${alert.sellingPrice} SAR</td>
+                    <td>${alert.costPrice} / ${alert.sellingPrice} دينار</td>
                     <td>${alert.lastUpdate}</td>
                     <td><span class="${statusClass}">${alert.status}</span></td>
                     <td>
@@ -470,8 +455,6 @@
             });
         }
 
-        // --- دوال التحكم في النوافذ المنبثقة (المودال) ---
-
         function openModal(id) {
             document.getElementById(id).style.display = 'block';
         }
@@ -480,15 +463,13 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // --- دوال معالجة الإجراءات ---
-
         function openPurchaseModal(alertId) {
             selectedAlertId = alertId;
             const alert = alerts.find(a => a.id === alertId);
             document.getElementById('purchaseProductName').textContent = alert.product;
             document.getElementById('purchaseCost').value = alert.costPrice;
-            document.getElementById('purchaseQuantity').value = alert.minLevel * 2; // اقتراح كمية
-            updatePurchaseTotalPrice(); // تحديث السعر الإجمالي عند الفتح
+            document.getElementById('purchaseQuantity').value = alert.minLevel * 2;
+            updatePurchaseTotalPrice();
             openModal('purchaseModal');
         }
 
@@ -496,10 +477,9 @@
             const quantity = parseFloat(document.getElementById('purchaseQuantity').value) || 0;
             const cost = parseFloat(document.getElementById('purchaseCost').value) || 0;
             const totalPrice = quantity * cost;
-            document.getElementById('purchaseTotalPrice').textContent = `${totalPrice.toFixed(2)} SAR`;
+            document.getElementById('purchaseTotalPrice').textContent = `${totalPrice.toFixed(2)} دينار`;
         }
 
-        // ربط دالة التحديث بحقول الإدخال
         document.getElementById('purchaseQuantity').oninput = updatePurchaseTotalPrice;
         document.getElementById('purchaseCost').oninput = updatePurchaseTotalPrice;
 
@@ -515,71 +495,61 @@
                 return;
             }
 
-            // محاكاة إرسال طلب الشراء
             console.log(`تم إرسال طلب شراء للمنتج: ${alert.product}`);
-            console.log(`الكمية: ${quantity}، التكلفة للوحدة: ${cost}، المورد: ${supplier || 'غير محدد'}`);
             
-            // تحديث حالة التنبيه في المنظومة الحية
             alert.status = 'محلول';
             alert.lastUpdate = new Date().toISOString().slice(0, 10);
             
             closeModal('purchaseModal');
             loadAlerts();
             updateStats();
-            saveAlerts(); // حفظ التغيير في Local Storage
+            saveAlerts();
             alert(`✅ تم تأكيد طلب الشراء للمنتج: ${alert.product}`);
         }
 
-        // دالة إنشاء طلب شراء مجمع (Batch Purchase Order)
         function createBatchPurchaseOrder() {
-            // تصفية المنتجات التي تحتاج شراء: (المخزون أقل من 50% من الحد الأدنى) أو نفذت
             const itemsToBuy = alerts.filter(a => a.currentStock < a.minLevel * 0.5 && a.status !== 'محلول' && a.status !== 'متجاهل');
 
             if (itemsToBuy.length === 0) {
-                alert('لا توجد منتجات حالياً تحتاج إلى طلب شراء مجمع.');
+                alert('لا توجد منتجات حالياً تحتاج إلى طلب شراء منتجات.');
                 return;
             }
 
-            let orderList = 'طلب شراء مجمع:\n';
+            let orderList = 'طلب شراء منتجات:\n';
             let totalOrderCost = 0;
 
             itemsToBuy.forEach(item => {
-                const requiredQty = (item.minLevel * 2) - item.currentStock; // اقتراح كمية ضعف الحد الأدنى ناقص الموجود
+                const requiredQty = (item.minLevel * 2) - item.currentStock;
                 const itemCost = requiredQty * item.costPrice;
                 totalOrderCost += itemCost;
                 
                 orderList += `\n- المنتج: ${item.product}`;
                 orderList += ` (ID: ${item.id}) | الكمية المطلوبة: ${requiredQty} حبة`;
-                orderList += ` | التكلفة التقديرية: ${itemCost.toFixed(2)} SAR`;
+                orderList += ` | التكلفة التقديرية: ${itemCost.toFixed(2)} دينار`;
                 
-                // تحديث حالة المنتجات التي تم إدراجها
                 item.status = 'مقروء';
             });
             
-            // تحديث المنظومة بعد إنشاء الطلب
             loadAlerts();
             updateStats();
-            saveAlerts(); // حفظ التغيير
+            saveAlerts();
 
-            orderList += `\n\n- التكلفة الإجمالية التقديرية للطلب: ${totalOrderCost.toFixed(2)} SAR.`;
+            orderList += `\n\n- التكلفة الإجمالية التقديرية للطلب: ${totalOrderCost.toFixed(2)} دينار.`;
             
-            alert(orderList); // عرض قائمة الطلب للمستخدم (يمكن تحويلها لطباعة أو ملف PDF)
+            alert(orderList);
         }
-
-        // --- دوال التخفيضات والربحية ---
 
         function openSalesModal(alertId) {
             selectedAlertId = alertId;
             const alert = alerts.find(a => a.id === alertId);
             document.getElementById('saleProductName').textContent = alert.product;
-            document.getElementById('saleOriginalPrice').textContent = `${alert.sellingPrice.toFixed(2)} SAR`;
-            document.getElementById('saleCostPrice').textContent = `${alert.costPrice.toFixed(2)} SAR`;
+            document.getElementById('saleOriginalPrice').textContent = `${alert.sellingPrice.toFixed(2)} دينار`;
+            document.getElementById('saleCostPrice').textContent = `${alert.costPrice.toFixed(2)} دينار`;
             
-            // تعيين خصم افتراضي إذا كان المخزون منخفض جداً
             const defaultDiscount = alert.currentStock < alert.minLevel * 0.3 ? 20 : 10;
             document.getElementById('saleDiscount').value = defaultDiscount;
 
-            calculateSaleProfit(); // حساب الربح فوراً
+            calculateSaleProfit();
             openModal('salesModal');
         }
 
@@ -596,17 +566,17 @@
             const newPrice = originalPrice * (1 - discount / 100);
             const profitMargin = newPrice - costPrice;
             
-            newPriceElement.textContent = `${newPrice.toFixed(2)} SAR`;
+            newPriceElement.textContent = `${newPrice.toFixed(2)} دينار`;
 
             if (profitMargin > 0) {
-                statusElement.textContent = `✅ ربح متوقع: ${profitMargin.toFixed(2)} SAR`;
-                statusElement.style.color = var(--success-color);
+                statusElement.textContent = `✅ ربح متوقع: ${profitMargin.toFixed(2)} دينار`;
+                statusElement.style.color = '#28a745';
             } else if (profitMargin === 0) {
                 statusElement.textContent = `⚠️ نقطة تعادل: لا ربح ولا خسارة.`;
                 statusElement.style.color = '#daa520';
             } else {
-                statusElement.textContent = `❌ خسارة متوقعة: ${Math.abs(profitMargin).toFixed(2)} SAR (بيع بخسارة!)`;
-                statusElement.style.color = var(--danger-color);
+                statusElement.textContent = `❌ خسارة متوقعة: ${Math.abs(profitMargin).toFixed(2)} دينار (بيع بخسارة!)`;
+                statusElement.style.color = '#dc3545';
             }
         }
 
@@ -619,21 +589,15 @@
                 return;
             }
             
-            // محاكاة تسجيل التخفيض
-            console.log(`تم تفعيل عرض تخفيض ${discount}% على المنتج: ${alert.product}`);
-            
-            // تحديث حالة التنبيه
             alert.status = 'محلول';
             alert.lastUpdate = new Date().toISOString().slice(0, 10);
 
             closeModal('salesModal');
             loadAlerts();
             updateStats();
-            saveAlerts(); // حفظ التغيير
+            saveAlerts();
             alert(`✅ تم إعداد عرض التخفيض بنسبة ${discount}% للمنتج: ${alert.product}`);
         }
-
-        // --- دوال تغيير الحالة ---
 
         function markAsRead(alertId) {
             const alert = alerts.find(a => a.id === alertId);
@@ -642,7 +606,7 @@
                 alert.lastUpdate = new Date().toISOString().slice(0, 10);
                 loadAlerts();
                 updateStats();
-                saveAlerts(); // حفظ التغيير
+                saveAlerts();
             }
         }
         
@@ -669,7 +633,7 @@
             closeModal('ignoreModal');
             loadAlerts();
             updateStats();
-            saveAlerts(); // حفظ التغيير
+            saveAlerts();
             alert(`✅ تم تجاهل التنبيه للمنتج: ${alert.product}. السبب: ${reason}`);
         }
 
@@ -680,18 +644,16 @@
                 alert.lastUpdate = new Date().toISOString().slice(0, 10);
                 loadAlerts();
                 updateStats();
-                saveAlerts(); // حفظ التغيير
+                saveAlerts();
                 alert('✅ تم استرجاع التنبيه وإعادته للحالة "جديد".');
             }
         }
 
-
-        // --- تشغيل الدوال عند تحميل الصفحة ---
         window.onload = function() {
-            loadInitialData(); // تبدأ بتحميل البيانات من Local Storage أو البيانات التجريبية
+            loadInitialData();
             updateStats();
             updateTime();
-            setInterval(updateTime, 1000); // تحديث الوقت كل ثانية
+            setInterval(updateTime, 1000);
         };
     </script>
 </body>
