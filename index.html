@@ -213,6 +213,117 @@
             position: relative;
         }
 
+        /* تنسيق خاص لمودال التخفيضات الجماعية */
+        #bulkSalesModal .modal-content {
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .bulk-actions-header {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .bulk-actions-header label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .bulk-actions-header input[type="checkbox"] {
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .bulk-products-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .bulk-products-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bulk-products-list th {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px;
+            position: sticky;
+            top: 0;
+        }
+
+        .bulk-products-list td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .bulk-products-list tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .bulk-discount-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid var(--warning-color);
+        }
+
+        .bulk-discount-section label {
+            font-weight: bold;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .bulk-discount-section input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2em;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .bulk-summary {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .bulk-summary strong {
+            color: var(--dark-bg);
+        }
+
+        .bulk-action-buttons {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .bulk-action-buttons button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
         .close-btn {
             color: #aaa;
             float: left;
@@ -282,7 +393,7 @@
 
         <section class="actions-bar">
             <button class="btn-success" onclick="createBatchPurchaseOrder()">📜 إنشاء طلب شراء منتجات</button>
-            <button class="btn-primary" onclick="openSalesModal()">🏷️ إدارة عروض التخفيضات</button>
+            <button class="btn-primary" onclick="openBulkSalesModal()">🏷️ إدارة عروض التخفيضات الجماعية</button>
         </section>
 
         <section class="alerts-section">
@@ -309,6 +420,7 @@
         </section>
     </div>
 
+    <!-- مودال إنشاء أمر شراء لمنتج واحد -->
     <div id="purchaseModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('purchaseModal')">&times;</span>
@@ -322,6 +434,7 @@
         </div>
     </div>
 
+    <!-- مودال تخفيض لمنتج واحد -->
     <div id="salesModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('salesModal')">&times;</span>
@@ -335,7 +448,8 @@
             <button class="btn-success" onclick="submitSaleOffer()">تأكيد عرض التخفيض</button>
         </div>
     </div>
-    
+
+    <!-- مودال تجاهل تنبيه -->
     <div id="ignoreModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('ignoreModal')">&times;</span>
@@ -343,6 +457,64 @@
             <p>هل أنت متأكد من تجاهل التنبيه للمنتج: <span id="ignoreProductName"></span>؟</p>
             <input type="text" id="ignoreReason" placeholder="اذكر سبب التجاهل (إجباري)" required>
             <button class="btn-secondary" onclick="ignoreAlertConfirmed()" style="background-color: var(--secondary-color); color: white;">تأكيد التجاهل</button>
+        </div>
+    </div>
+
+    <!-- مودال التخفيضات الجماعية الجديد -->
+    <div id="bulkSalesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('bulkSalesModal')">&times;</span>
+            <h2>🏷️ إدارة عروض التخفيضات الجماعية</h2>
+            
+            <div class="bulk-actions-header">
+                <label>
+                    <input type="checkbox" id="applyToAllLowStock" onchange="toggleAutoDiscount(this)">
+                    ⚡ تطبيق تخفيض تلقائي على جميع المنتجات تحت الحد الأدنى
+                </label>
+            </div>
+
+            <h3 style="color: var(--primary-color);">اختر المنتجات لتطبيق التخفيض عليها:</h3>
+            <div class="bulk-products-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="padding: 10px;">
+                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                            </th>
+                            <th style="padding: 10px;">المنتج</th>
+                            <th style="padding: 10px;">المخزون الحالي</th>
+                            <th style="padding: 10px;">الحد الأدنى</th>
+                            <th style="padding: 10px;">سعر البيع</th>
+                            <th style="padding: 10px;">نسبة النقص</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bulkSalesProductsList">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bulk-discount-section">
+                <label>نسبة التخفيض (%)</label>
+                <input type="number" id="bulkDiscountPercentage" placeholder="مثال: 50" min="1" max="100" value="50" 
+                       oninput="updateBulkDiscountSummary()">
+                
+                <div class="bulk-summary" id="bulkDiscountSummary">
+                    <strong>📊 ملخص التأثير:</strong><br>
+                    عدد المنتجات المحددة: <span id="selectedCount">0</span><br>
+                    إجمالي التكلفة قبل التخفيض: <span id="totalBeforeDiscount">0 دينار</span><br>
+                    إجمالي التكلفة بعد التخفيض: <span id="totalAfterDiscount">0 دينار</span><br>
+                    <strong style="color: var(--success-color);">💰 الإجمالي المتوقع: <span id="finalTotal">0 دينار</span></strong>
+                </div>
+            </div>
+
+            <div class="bulk-action-buttons">
+                <button class="btn-success" onclick="applyBulkDiscount()">
+                    ✅ تأكيد التخفيض على المحدد
+                </button>
+                <button class="btn-primary" id="autoDiscountBtn" onclick="autoDiscountAllLowStock()" style="display: none;">
+                    ⚡ تخفيض تلقائي على الكل
+                </button>
+            </div>
         </div>
     </div>
 
@@ -482,7 +654,6 @@
 
         document.getElementById('purchaseQuantity').oninput = updatePurchaseTotalPrice;
         document.getElementById('purchaseCost').oninput = updatePurchaseTotalPrice;
-
 
         function submitPurchase() {
             const alert = alerts.find(a => a.id === selectedAlertId);
@@ -647,6 +818,1061 @@
                 saveAlerts();
                 alert('✅ تم استرجاع التنبيه وإعادته للحالة "جديد".');
             }
+        }
+
+        // دوال مودال التخفيضات الجماعية
+        function openBulkSalesModal() {
+            populateBulkSalesList();
+            document.getElementById('bulkSalesModal').style.display = 'block';
+            updateBulkDiscountSummary();
+        }
+
+        function populateBulkSalesList() {
+            const tbody = document.getElementById('bulkSalesProductsList');
+            tbody.innerHTML = '';
+            
+            // فقط المنتجات تحت الحد الأدنى
+            const lowStockProducts = alerts.filter(a => a.currentStock < a.minLevel && a.status !== 'محلول' && a.status !== 'متجاهل');
+            
+            if (lowStockProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--secondary-color);">لا توجد منتجات تحت الحد الأدنى</td></tr>';
+                return;
+            }
+            
+            lowStockProducts.forEach(alert => {
+                const ratio = ((alert.minLevel - alert.currentStock) / alert.minLevel * 100).toFixed(0);
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td style="padding: 10px;"><input type="checkbox" class="product-checkbox" data-id="${alert.id}" onchange="updateBulkDiscountSummary()"></td>
+                    <td style="padding: 10px;"><strong>${alert.product}</strong></td>
+                    <td style="padding: 10px; color: var(--danger-color);">${alert.currentStock}</td>
+                    <td style="padding: 10px;">${alert.minLevel}</td>
+                    <td style="padding: 10px;">${alert.sellingPrice} دينار</td>
+                    <td style="padding: 10px; color: var(--warning-color);">نقص ${ratio}%</td>
+                `;
+            });
+        }
+
+        function toggleSelectAll() {
+            const mainCheckbox = document.getElementById('selectAllCheckbox');
+            const checkboxes = document.querySelectorAll('.product-checkbox');
+            checkboxes.forEach(cb => cb.checked = mainCheckbox.checked);
+            updateBulkDiscountSummary();
+        }
+
+        function toggleAutoDiscount(checkbox) {
+            const autoBtn = document.getElementById('autoDiscountBtn');
+            if (checkbox.checked) {
+                autoBtn.style.display = 'inline-block';
+            } else {
+                autoBtn.style.display = 'none';
+            }
+        }
+
+        function updateBulkDiscountSummary() {
+            const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+            const discount = parseFloat(document.getElementById('bulkDiscountPercentage').value) || 0;
+            
+            let totalBefore = 0;
+            let totalAfter = 0;
+            
+            checkboxes.forEach(cb => {
+                const alertId = parseInt(cb.getAttribute('data-id'));
+                const alert = alerts.find(a => a.id === alertId);
+                const qty = alert.currentStock;
+                const price = alert.sellingPrice;
+                const discountedPrice = price * (1 - discount / 100);
+                
+                totalBefore += qty * price;
+                totalAfter += qty * discountedPrice;
+            });
+            
+            document.getElementById('selectedCount').textContent = checkboxes.length;
+            document.getElementById('totalBeforeDiscount').textContent = `${totalBefore.toFixed(2)} دينار`;
+            document.getElementById('totalAfterDiscount').textContent = `${totalAfter.toFixed(2)} دينار`;
+            document.getElementById('finalTotal').textContent = `${totalAfter.toFixed(2)} دينار`;
+        }
+
+        function autoDiscountAllLowStock() {
+            const discount = parseFloat(document.getElementById('bulkDiscountPercentage').value) || 50;
+            const lowStockProducts = alerts.filter(a => a.currentStock < a.minLevel && a.status !== 'محلول' && a.status !== 'متجاهل');
+            
+            lowStockProducts.forEach(alert => {
+                alert.status = 'محلول';
+                alert.lastUpdate = new Date().toISOString().slice(0, 10);
+            });
+            
+            saveAlerts();
+            loadAlerts();
+            updateStats();
+            closeModal('bulkSalesModal');
+            alert(`✅ تم تطبيق تخفيض ${discount}% على ${lowStockProducts.length} منتج تلقائياً`);
+        }
+
+        function applyBulkDiscount() {
+            const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+            const discount = parseFloat(document.getElementById('bulkDiscountPercentage').value) || 50;
+            
+            if (checkboxes.length === 0) {
+                alert('الرجاء اختيار منتج واحد على الأقل');
+                return;
+            }
+            
+            checkboxes.forEach(cb => {
+                const alertId = parseInt(cb.getAttribute('data-id'));
+                const alert = alerts.find(a => a.id === alertId);
+                alert.status = 'محلول';
+                alert.lastUpdate = new Date().toISOString().slice(0, 10);
+            });
+            
+            saveAlerts();
+            loadAlerts();
+            updateStats();
+   <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة محل ملابس رجالية - لوحة تحكم المخزون</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-bg);
+            direction: rtl;
+            text-align: right;
+            color: var(--dark-bg);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #e9ecef, #ffffff);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-right: 5px solid var(--info-color);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+            font-size: 1em;
+        }
+
+        .stat-card p {
+            font-size: 2em;
+            margin: 5px 0 0;
+            font-weight: bold;
+            color: var(--dark-bg);
+        }
+        
+        #current-time {
+            font-size: 1em;
+            color: var(--secondary-color);
+            margin-top: 10px;
+        }
+
+        .actions-bar {
+            margin: 30px 0;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .actions-bar button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #1e7e34;
+        }
+
+        .alerts-section h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            color: var(--primary-color);
+            margin-top: 30px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .alerts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .alerts-table th, .alerts-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .alerts-table th {
+            background-color: var(--dark-bg);
+            color: white;
+            font-weight: 600;
+        }
+
+        .alerts-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .alerts-table tr:hover {
+            background-color: #e9e9e9;
+        }
+
+        .status-new {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .status-read {
+            background-color: var(--warning-color);
+            color: var(--dark-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .status-solved {
+            background-color: var(--success-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .status-ignored {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        /* تنسيق خاص لمودال التخفيضات الجماعية */
+        #bulkSalesModal .modal-content {
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .bulk-actions-header {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .bulk-actions-header label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .bulk-actions-header input[type="checkbox"] {
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .bulk-products-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .bulk-products-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bulk-products-list th {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px;
+            position: sticky;
+            top: 0;
+        }
+
+        .bulk-products-list td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .bulk-products-list tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .bulk-discount-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid var(--warning-color);
+        }
+
+        .bulk-discount-section label {
+            font-weight: bold;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .bulk-discount-section input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2em;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .bulk-summary {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .bulk-summary strong {
+            color: var(--dark-bg);
+        }
+
+        .bulk-action-buttons {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .bulk-action-buttons button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-content label, .modal-content input, .modal-content button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .modal-content input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content button {
+            padding: 10px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>إدارة تنبيهات المخزون 📣</h1>
+            <p id="current-time"></p>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card" style="border-right-color: var(--danger-color);">
+                <h3>🚨 إجمالي التنبيهات النشطة</h3>
+                <p id="total-alerts">0</p>
+            </div>
+            <div class="stat-card" style="border-right-color: var(--primary-color);">
+                <h3>📉 المنتجات تحت مستوى الخطر</h3>
+                <p id="critical-items">0</p>
+            </div>
+            <div class="stat-card" style="border-right-color: var(--warning-color);">
+                <h3>💰 قيمة المخزون الحالي (تقريبي)</h3>
+                <p id="total-value">0 دينار</p>
+            </div>
+            <div class="stat-card" style="border-right-color: var(--success-color);">
+                <h3>✅ التنبيهات المحلولة</h3>
+                <p id="solved-alerts">0</p>
+            </div>
+        </section>
+
+        <section class="actions-bar">
+            <button class="btn-success" onclick="createBatchPurchaseOrder()">📜 إنشاء طلب شراء منتجات</button>
+            <button class="btn-primary" onclick="openBulkSalesModal()">🏷️ إدارة عروض التخفيضات الجماعية</button>
+        </section>
+
+        <section class="alerts-section">
+            <h2>قائمة تنبيهات المخزون</h2>
+            <div class="table-responsive">
+                <table class="alerts-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>المنتج</th>
+                            <th>المخزون الحالي</th>
+                            <th>الحد الأدنى</th>
+                            <th>حالة المخزون</th>
+                            <th>السعر (تكلفة / بيع)</th>
+                            <th>آخر تحديث</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- مودال إنشاء أمر شراء لمنتج واحد -->
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('purchaseModal')">&times;</span>
+            <h2>إنشاء أمر شراء جديد</h2>
+            <p>اسم المنتج: <span id="purchaseProductName"></span></p>
+            <input type="number" id="purchaseQuantity" placeholder="الكمية المطلوبة (بالحبة)" value="100" min="10">
+            <input type="number" id="purchaseCost" placeholder="سعر التكلفة للوحدة (دينار)" min="0.01">
+            <input type="text" id="purchaseSupplier" placeholder="اسم المورد (اختياري)">
+            <p>السعر الإجمالي المتوقع: <span id="purchaseTotalPrice">0 دينار</span></p>
+            <button class="btn-primary" onclick="submitPurchase()">تأكيد وإرسال الطلب</button>
+        </div>
+    </div>
+
+    <!-- مودال تخفيض لمنتج واحد -->
+    <div id="salesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('salesModal')">&times;</span>
+            <h2>🏷️ إدارة عروض التخفيضات</h2>
+            <p>المنتج: <span id="saleProductName"></span></p>
+            <p>السعر الأصلي: <span id="saleOriginalPrice"></span></p>
+            <input type="number" id="saleDiscount" placeholder="نسبة الخصم (%)" min="1" max="100" value="10" oninput="calculateSaleProfit()">
+            <p>السعر الجديد بعد الخصم: <span id="saleNewPrice">0 دينار</span></p>
+            <p>تكلفة الوحدة: <span id="saleCostPrice"></span></p>
+            <p>الربح المتوقع: <span id="saleProfitStatus" style="font-weight: bold;">يُحسب بعد إدخال الخصم</span></p>
+            <button class="btn-success" onclick="submitSaleOffer()">تأكيد عرض التخفيض</button>
+        </div>
+    </div>
+
+    <!-- مودال تجاهل تنبيه -->
+    <div id="ignoreModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('ignoreModal')">&times;</span>
+            <h2>تجاهل تنبيه</h2>
+            <p>هل أنت متأكد من تجاهل التنبيه للمنتج: <span id="ignoreProductName"></span>؟</p>
+            <input type="text" id="ignoreReason" placeholder="اذكر سبب التجاهل (إجباري)" required>
+            <button class="btn-secondary" onclick="ignoreAlertConfirmed()" style="background-color: var(--secondary-color); color: white;">تأكيد التجاهل</button>
+        </div>
+    </div>
+
+    <!-- مودال التخفيضات الجماعية الجديد -->
+    <div id="bulkSalesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('bulkSalesModal')">&times;</span>
+            <h2>🏷️ إدارة عروض التخفيضات الجماعية</h2>
+            
+            <div class="bulk-actions-header">
+                <label>
+                    <input type="checkbox" id="applyToAllLowStock" onchange="toggleAutoDiscount(this)">
+                    ⚡ تطبيق تخفيض تلقائي على جميع المنتجات تحت الحد الأدنى
+                </label>
+            </div>
+
+            <h3 style="color: var(--primary-color);">اختر المنتجات لتطبيق التخفيض عليها:</h3>
+            <div class="bulk-products-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="padding: 10px;">
+                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                            </th>
+                            <th style="padding: 10px;">المنتج</th>
+                            <th style="padding: 10px;">المخزون الحالي</th>
+                            <th style="padding: 10px;">الحد الأدنى</th>
+                            <th style="padding: 10px;">سعر البيع</th>
+                            <th style="padding: 10px;">نسبة النقص</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bulkSalesProductsList">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bulk-discount-section">
+                <label>نسبة التخفيض (%)</label>
+                <input type="number" id="bulkDiscountPercentage" placeholder="مثال: 50" min="1" max="100" value="50" 
+                       oninput="updateBulkDiscountSummary()">
+                
+                <div class="bulk-summary" id="bulkDiscountSummary">
+                    <strong>📊 ملخص التأثير:</strong><br>
+                    عدد المنتجات المحددة: <span id="selectedCount">0</span><br>
+                    إجمالي التكلفة قبل التخفيض: <span id="totalBeforeDiscount">0 دينار</span><br>
+                    إجمالي التكلفة بعد التخفيض: <span id="totalAfterDiscount">0 دينار</span><br>
+                    <strong style="color: var(--success-color);">💰 الإجمالي المتوقع: <span id="finalTotal">0 دينار</span></strong>
+                </div>
+            </div>
+
+            <div class="bulk-action-buttons">
+                <button class="btn-success" onclick="applyBulkDiscount()">
+                    ✅ تأكيد التخفيض على المحدد
+                </button>
+                <button class="btn-primary" id="autoDiscountBtn" onclick="autoDiscountAllLowStock()" style="display: none;">
+                    ⚡ تخفيض تلقائي على الكل
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let alerts = [
+            { id: 0007269, product: 'قميص أبيض كلاسيك', currentStock: 5, minLevel: 50, costPrice: 40, sellingPrice: 80, lastUpdate: '2025-12-01', status: 'جديد' },
+            { id: 0008727, product: 'بنطلون جينز أزرق', currentStock: 120, minLevel: 100, costPrice: 60, sellingPrice: 150, lastUpdate: '2025-12-05', status: 'مقروء' },
+            { id: 0008377, product: 'كوفية شتوية صوف', currentStock: 0, minLevel: 30, costPrice: 15, sellingPrice: 45, lastUpdate: '2025-11-20', status: 'جديد' },
+            { id: 0008376, product: 'ربطة عنق حرير سوداء', currentStock: 25, minLevel: 50, costPrice: 20, sellingPrice: 60, lastUpdate: '2025-12-09', status: 'جديد' },
+            { id: 0003762, product: 'جاكيت جلد أسود', currentStock: 80, minLevel: 70, costPrice: 250, sellingPrice: 500, lastUpdate: '2025-12-08', status: 'محلول' }
+        ];
+
+        let selectedAlertId = null;
+
+        function saveAlerts() {
+            try {
+                localStorage.setItem('inventoryAlerts', JSON.stringify(alerts));
+            } catch (e) {
+                console.error("❌ فشل حفظ البيانات:", e);
+            }
+        }
+
+        function loadInitialData() {
+            const storedAlerts = localStorage.getItem('inventoryAlerts');
+            if (storedAlerts) {
+                try {
+                    alerts = JSON.parse(storedAlerts);
+                } catch (e) {
+                    console.error("❌ فشل تحليل البيانات المحفوظة، استخدام البيانات التجريبية.", e);
+                }
+            }
+            loadAlerts();
+        }
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString('ar-EG', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        function updateStats() {
+            const activeAlerts = alerts.filter(a => a.status === 'جديد' || a.status === 'مقروء');
+            const criticalItems = activeAlerts.filter(a => a.currentStock < a.minLevel).length;
+            const solvedAlerts = alerts.filter(a => a.status === 'محلول').length;
+            
+            const totalValue = alerts.reduce((sum, a) => sum + (a.currentStock * a.costPrice), 0);
+
+            document.getElementById('total-alerts').textContent = activeAlerts.length;
+            document.getElementById('critical-items').textContent = criticalItems;
+            document.getElementById('solved-alerts').textContent = solvedAlerts;
+            document.getElementById('total-value').textContent = `${totalValue.toFixed(2)} دينار`;
+        }
+
+        function getStockStatus(current, min) {
+            const ratio = current / min;
+            let status = '';
+
+            if (current <= 0) {
+                status = '🚨 نفذ - شراء فوري';
+            } else if (ratio < 0.5) {
+                status = '🔥 خطر حرج';
+            } else if (current < min) {
+                status = '⚠️ منخفض';
+            } else {
+                status = '✅ جيد';
+            }
+            
+            return `<span style="font-weight: bold; color: ${ratio <= 0 ? '#dc3545' : ratio < 0.5 ? '#ff4500' : ratio < 1 ? '#daa520' : '#28a745'};">${status}</span>`;
+        }
+
+        function loadAlerts() {
+            const tbody = document.getElementById('alerts-body');
+            tbody.innerHTML = '';
+
+            alerts.forEach(alert => {
+                let statusClass = '';
+                if (alert.status === 'جديد') statusClass = 'status-new';
+                else if (alert.status === 'مقروء') statusClass = 'status-read';
+                else if (alert.status === 'محلول') statusClass = 'status-solved';
+                else if (alert.status === 'متجاهل') statusClass = 'status-ignored';
+                else statusClass = 'status-read';
+
+                const isSolved = alert.status === 'محلول' || alert.status === 'متجاهل';
+                
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${alert.id}</td>
+                    <td>${alert.product}</td>
+                    <td>${alert.currentStock}</td>
+                    <td>${alert.minLevel}</td>
+                    <td>${getStockStatus(alert.currentStock, alert.minLevel)}</td>
+                    <td>${alert.costPrice} / ${alert.sellingPrice} دينار</td>
+                    <td>${alert.lastUpdate}</td>
+                    <td><span class="${statusClass}">${alert.status}</span></td>
+                    <td>
+                        ${!isSolved ? `
+                            <button class="btn-primary" onclick="openPurchaseModal(${alert.id})" title="إنشاء أمر شراء">شراء</button>
+                            <button class="btn-success" onclick="openSalesModal(${alert.id})" title="إضافة لعروض البيع">تخفيض</button>
+                            ${alert.status === 'جديد' ? 
+                                `<button class="btn-secondary" onclick="markAsRead(${alert.id})" title="تمت مراجعة التنبيه" style="background-color: var(--info-color); color: white;">مقروء</button>` : ''}
+                            <button class="btn-danger" onclick="openIgnoreModal(${alert.id})" title="تجاهل التنبيه مؤقتاً" style="background-color: var(--danger-color); color: white;">تجاهل</button>
+                        ` : `
+                            <button class="btn-info" onclick="restoreAlert(${alert.id})" title="إعادة التفعيل" style="background-color: var(--secondary-color); color: white;">استرجاع</button>
+                            <span style="color: var(--secondary-color);">لا يوجد إجراء</span>
+                        `}
+                    </td>
+                `;
+            });
+        }
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function openPurchaseModal(alertId) {
+            selectedAlertId = alertId;
+            const alert = alerts.find(a => a.id === alertId);
+            document.getElementById('purchaseProductName').textContent = alert.product;
+            document.getElementById('purchaseCost').value = alert.costPrice;
+            document.getElementById('purchaseQuantity').value = alert.minLevel * 2;
+            updatePurchaseTotalPrice();
+            openModal('purchaseModal');
+        }
+
+        function updatePurchaseTotalPrice() {
+            const quantity = parseFloat(document.getElementById('purchaseQuantity').value) || 0;
+            const cost = parseFloat(document.getElementById('purchaseCost').value) || 0;
+            const totalPrice = quantity * cost;
+            document.getElementById('purchaseTotalPrice').textContent = `${totalPrice.toFixed(2)} دينار`;
+        }
+
+        document.getElementById('purchaseQuantity').oninput = updatePurchaseTotalPrice;
+        document.getElementById('purchaseCost').oninput = updatePurchaseTotalPrice;
+
+        function submitPurchase() {
+            const alert = alerts.find(a => a.id === selectedAlertId);
+            const quantity = parseFloat(document.getElementById('purchaseQuantity').value);
+            const cost = parseFloat(document.getElementById('purchaseCost').value);
+            const supplier = document.getElementById('purchaseSupplier').value;
+
+            if (quantity <= 0 || cost <= 0) {
+                alert('الرجاء إدخال كمية وسعر تكلفة صحيحين.');
+                return;
+            }
+
+            console.log(`تم إرسال طلب شراء للمنتج: ${alert.product}`);
+            
+            alert.status = 'محلول';
+            alert.lastUpdate = new Date().toISOString().slice(0, 10);
+            
+            closeModal('purchaseModal');
+            loadAlerts();
+            updateStats();
+            saveAlerts();
+            alert(`✅ تم تأكيد طلب الشراء للمنتج: ${alert.product}`);
+        }
+
+        function createBatchPurchaseOrder() {
+            const itemsToBuy = alerts.filter(a => a.currentStock < a.minLevel * 0.5 && a.status !== 'محلول' && a.status !== 'متجاهل');
+
+            if (itemsToBuy.length === 0) {
+                alert('لا توجد منتجات حالياً تحتاج إلى طلب شراء منتجات.');
+                return;
+            }
+
+            let orderList = 'طلب شراء منتجات:\n';
+            let totalOrderCost = 0;
+
+            itemsToBuy.forEach(item => {
+                const requiredQty = (item.minLevel * 2) - item.currentStock;
+                const itemCost = requiredQty * item.costPrice;
+                totalOrderCost += itemCost;
+                
+                orderList += `\n- المنتج: ${item.product}`;
+                orderList += ` (ID: ${item.id}) | الكمية المطلوبة: ${requiredQty} حبة`;
+                orderList += ` | التكلفة التقديرية: ${itemCost.toFixed(2)} دينار`;
+                
+                item.status = 'مقروء';
+            });
+            
+            loadAlerts();
+            updateStats();
+            saveAlerts();
+
+            orderList += `\n\n- التكلفة الإجمالية التقديرية للطلب: ${totalOrderCost.toFixed(2)} دينار.`;
+            
+            alert(orderList);
+        }
+
+        function openSalesModal(alertId) {
+            selectedAlertId = alertId;
+            const alert = alerts.find(a => a.id === alertId);
+            document.getElementById('saleProductName').textContent = alert.product;
+            document.getElementById('saleOriginalPrice').textContent = `${alert.sellingPrice.toFixed(2)} دينار`;
+            document.getElementById('saleCostPrice').textContent = `${alert.costPrice.toFixed(2)} دينار`;
+            
+            const defaultDiscount = alert.currentStock < alert.minLevel * 0.3 ? 20 : 10;
+            document.getElementById('saleDiscount').value = defaultDiscount;
+
+            calculateSaleProfit();
+            openModal('salesModal');
+        }
+
+        function calculateSaleProfit() {
+            const alert = alerts.find(a => a.id === selectedAlertId);
+            if (!alert) return;
+
+            const discount = parseFloat(document.getElementById('saleDiscount').value) || 0;
+            const originalPrice = alert.sellingPrice;
+            const costPrice = alert.costPrice;
+            const statusElement = document.getElementById('saleProfitStatus');
+            const newPriceElement = document.getElementById('saleNewPrice');
+
+            const newPrice = originalPrice * (1 - discount / 100);
+            const profitMargin = newPrice - costPrice;
+            
+            newPriceElement.textContent = `${newPrice.toFixed(2)} دينار`;
+
+            if (profitMargin > 0) {
+                statusElement.textContent = `✅ ربح متوقع: ${profitMargin.toFixed(2)} دينار`;
+                statusElement.style.color = '#28a745';
+            } else if (profitMargin === 0) {
+                statusElement.textContent = `⚠️ نقطة تعادل: لا ربح ولا خسارة.`;
+                statusElement.style.color = '#daa520';
+            } else {
+                statusElement.textContent = `❌ خسارة متوقعة: ${Math.abs(profitMargin).toFixed(2)} دينار (بيع بخسارة!)`;
+                statusElement.style.color = '#dc3545';
+            }
+        }
+
+        function submitSaleOffer() {
+            const alert = alerts.find(a => a.id === selectedAlertId);
+            const discount = parseFloat(document.getElementById('saleDiscount').value);
+
+            if (discount <= 0 || discount > 100) {
+                alert('الرجاء إدخال نسبة خصم صحيحة بين 1% و 100%.');
+                return;
+            }
+            
+            alert.status = 'محلول';
+            alert.lastUpdate = new Date().toISOString().slice(0, 10);
+
+            closeModal('salesModal');
+            loadAlerts();
+            updateStats();
+            saveAlerts();
+            alert(`✅ تم إعداد عرض التخفيض بنسبة ${discount}% للمنتج: ${alert.product}`);
+        }
+
+        function markAsRead(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            if (alert && alert.status === 'جديد') {
+                alert.status = 'مقروء';
+                alert.lastUpdate = new Date().toISOString().slice(0, 10);
+                loadAlerts();
+                updateStats();
+                saveAlerts();
+            }
+        }
+        
+        function openIgnoreModal(alertId) {
+            selectedAlertId = alertId;
+            const alert = alerts.find(a => a.id === alertId);
+            document.getElementById('ignoreProductName').textContent = alert.product;
+            document.getElementById('ignoreReason').value = '';
+            openModal('ignoreModal');
+        }
+
+        function ignoreAlertConfirmed() {
+            const alert = alerts.find(a => a.id === selectedAlertId);
+            const reason = document.getElementById('ignoreReason').value.trim();
+
+            if (!reason) {
+                alert('الرجاء إدخال سبب التجاهل.');
+                return;
+            }
+            
+            alert.status = 'متجاهل';
+            alert.lastUpdate = new Date().toISOString().slice(0, 10);
+
+            closeModal('ignoreModal');
+            loadAlerts();
+            updateStats();
+            saveAlerts();
+            alert(`✅ تم تجاهل التنبيه للمنتج: ${alert.product}. السبب: ${reason}`);
+        }
+
+        function restoreAlert(alertId) {
+            const alert = alerts.find(a => a.id === alertId);
+            if (alert && (alert.status === 'محلول' || alert.status === 'متجاهل')) {
+                alert.status = 'جديد';
+                alert.lastUpdate = new Date().toISOString().slice(0, 10);
+                loadAlerts();
+                updateStats();
+                saveAlerts();
+                alert('✅ تم استرجاع التنبيه وإعادته للحالة "جديد".');
+            }
+        }
+
+        // دوال مودال التخفيضات الجماعية
+        function openBulkSalesModal() {
+            populateBulkSalesList();
+            document.getElementById('bulkSalesModal').style.display = 'block';
+            updateBulkDiscountSummary();
+        }
+
+        function populateBulkSalesList() {
+            const tbody = document.getElementById('bulkSalesProductsList');
+            tbody.innerHTML = '';
+            
+            // فقط المنتجات تحت الحد الأدنى
+            const lowStockProducts = alerts.filter(a => a.currentStock < a.minLevel && a.status !== 'محلول' && a.status !== 'متجاهل');
+            
+            if (lowStockProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--secondary-color);">لا توجد منتجات تحت الحد الأدنى</td></tr>';
+                return;
+            }
+            
+            lowStockProducts.forEach(alert => {
+                const ratio = ((alert.minLevel - alert.currentStock) / alert.minLevel * 100).toFixed(0);
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td style="padding: 10px;"><input type="checkbox" class="product-checkbox" data-id="${alert.id}" onchange="updateBulkDiscountSummary()"></td>
+                    <td style="padding: 10px;"><strong>${alert.product}</strong></td>
+                    <td style="padding: 10px; color: var(--danger-color);">${alert.currentStock}</td>
+                    <td style="padding: 10px;">${alert.minLevel}</td>
+                    <td style="padding: 10px;">${alert.sellingPrice} دينار</td>
+                    <td style="padding: 10px; color: var(--warning-color);">نقص ${ratio}%</td>
+                `;
+            });
+        }
+
+        function toggleSelectAll() {
+            const mainCheckbox = document.getElementById('selectAllCheckbox');
+            const checkboxes = document.querySelectorAll('.product-checkbox');
+            checkboxes.forEach(cb => cb.checked = mainCheckbox.checked);
+            updateBulkDiscountSummary();
+        }
+
+        function toggleAutoDiscount(checkbox) {
+            const autoBtn = document.getElementById('autoDiscountBtn');
+            if (checkbox.checked) {
+                autoBtn.style.display = 'inline-block';
+            } else {
+                autoBtn.style.display = 'none';
+            }
+        }
+
+        function updateBulkDiscountSummary() {
+            const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+            const discount = parseFloat(document.getElementById('bulkDiscountPercentage').value) || 0;
+            
+            let totalBefore = 0;
+            let totalAfter = 0;
+            
+            checkboxes.forEach(cb => {
+                const alertId = parseInt(cb.getAttribute('data-id'));
+                const alert = alerts.find(a => a.id === alertId);
+                const qty = alert.currentStock;
+                const price = alert.sellingPrice;
+                const discountedPrice = price * (1 - discount / 100);
+                
+                totalBefore += qty * price;
+                totalAfter += qty * discountedPrice;
+            });
+            
+            document.getElementById('selectedCount').textContent = checkboxes.length;
+            document.getElementById('totalBeforeDiscount').textContent = `${totalBefore.toFixed(2)} دينار`;
+            document.getElementById('totalAfterDiscount').textContent = `${totalAfter.toFixed(2)} دينار`;
+            document.getElementById('finalTotal').textContent = `${totalAfter.toFixed(2)} دينار`;
+        }
+
+        function autoDiscountAllLowStock() {
+            const discount = parseFloat(document.getElementById('bulkDiscountPercentage').value) || 50;
+            const lowStockProducts = alerts.filter(a => a.currentStock < a.minLevel && a.status !== 'محلول' && a.status !== 'متجاهل');
+            
+            lowStockProducts.forEach(alert => {
+                alert.status = 'محلول';
+                alert.lastUpdate = new Date().toISOString().slice(0, 10);
+            });
+            
+            saveAlerts();
+            loadAlerts();
+            updateStats();
+            closeModal('bulkSalesModal');
+            alert(`✅ تم تطبيق تخفيض ${discount}% على ${lowStockProducts.length} منتج تلقائياً`);
+        }
+
+        function applyBulkDiscount() {
+            const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+            const discount = parseFloat(document.getElementById('bulkDiscountPercentage').value) || 50;
+            
+            if (checkboxes.length === 0) {
+                alert('الرجاء اختيار منتج واحد على الأقل');
+                return;
+            }
+            
+            checkboxes.forEach(cb => {
+                const alertId = parseInt(cb.getAttribute('data-id'));
+                const alert = alerts.find(a => a.id === alertId);
+                alert.status = 'محلول';
+                alert.lastUpdate = new Date().toISOString().slice(0, 10);
+            });
+            
+            saveAlerts();
+            loadAlerts();
+            updateStats();
+            closeModal('bulkSalesModal');
+            alert(`✅ تم تطبيق تخفيض ${discount}% على ${checkboxes.length} منتج`);
+        }
+
+        window.onload = function() {
+            loadInitialData();
+            updateStats();
+            updateTime();
+            setInterval(updateTime, 1000);
+        };
+    </script>
+</body>
+</html>
+         closeModal('bulkSalesModal');
+            alert(`✅ تم تطبيق تخفيض ${discount}% على ${checkboxes.length} منتج`);
         }
 
         window.onload = function() {
